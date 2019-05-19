@@ -2,6 +2,9 @@ class MainController:
     def __init__(self):
         self.current_page = None
 
+        self.original_image = None
+        self.original_tk_image = None
+
     def init_pages(self, pages):
         self.pages = pages
     # end init_pages
@@ -21,3 +24,11 @@ class MainController:
         self.current_page.before_show()
         page.grid()
     # end show_page
+
+    def set_original_image(self, image):
+        self.original_image = image
+    # end set_original_image
+
+    def get_original_image(self):
+        return self.original_image
+    # end get_original_image

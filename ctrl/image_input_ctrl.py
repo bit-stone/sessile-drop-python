@@ -1,6 +1,7 @@
 import cv2
 from PIL import Image, ImageTk
 from tkinter import filedialog
+import tkinter as tk
 
 from page.start import StartPage
 
@@ -21,26 +22,27 @@ class ImageInputController:
         self.camera_running = False
 
         self.output_widget = None
+        self.start_camera_button = None
 
         self.image = None
         self.image_tk = None
 
-        self.init_image_input()
-
-    def connect_page(self, page, output_widget):
+    def connect_page(self, page, output_widget, start_camera_button):
         self.page = page
         self.output_widget = output_widget
+        self.start_camera_button = start_camera_button
+        self.init_image_input()
 
     def before_hide(self):
         self.pause_camera()
 
     def before_show(self):
-        if(self.camera.isOpened() is not True):
+        if(self.camera is not None and self.camera.isOpened() is not True):
             self.init_image_input()
 
-    #**
-    #** end page stuff
-    #**
+    # **
+    # ** end page stuff
+    # **
 
     def show_start_page(self):
         self.main_ctrl.show_page(StartPage)
@@ -60,17 +62,20 @@ class ImageInputController:
                 raise Exception("no camera found")
             while(not self.camera.isOpened()):
                 pass
-            return True
         except Exception as e:
             print("camera init error")
             print(e)
             self.camera = None
-            return False
         except cv2.error as e:
             print("no camera found")
             print(e)
             self.camera = None
-            return False
+
+        if(self.camera is None):
+            print("test")
+            self.start_camera_button.config(state=tk.DISABLED)
+
+        return self.camera is not None
 
     def start_camera(self):
         if(not self.camera_running and self.camera is not None):
@@ -84,7 +89,6 @@ class ImageInputController:
             self.camera_running = False
             self.camera.release()
 
-
     def update_camera_output(self):
         if(self.camera_running is True and self.camera is not None):
             # capture frame
@@ -93,15 +97,14 @@ class ImageInputController:
             # convert to grayscale
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             self.image = Image.fromarray(cv2image)
-            self.image_tk = ImageTk.PhotoImage(image=self.image.resize((500, 282)))
+            self.image_tk = ImageTk.PhotoImage(
+                image=self.image.resize((500, 282))
+            )
             self.output_widget.configure(image=self.image_tk)
             self.output_widget.after(
                 IMAGE_INPUT_FRAME_DELAY,
                 self.update_camera_output
             )
-
-    def capture_camera_image(self):
-        pass
 
     def load_image_file(self):
         # stop camera
@@ -118,3 +121,9 @@ class ImageInputController:
         self.image = Image.open(file_name)
         self.image_tk = ImageTk.PhotoImage(image=self.image.resize((500, 282)))
         self.output_widget.configure(image=self.image_tk)
+
+    def send_image(self):
+        if(self.image is not None):
+            self.main_ctrl.set_original_image(self.image)
+        else:
+            print("no image to send")

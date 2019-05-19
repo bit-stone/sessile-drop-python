@@ -6,7 +6,10 @@ class ImageInputPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        label = tk.Label(self, text="Bildeingabe. Bitte entweder aus Datei öffnen oder Kamera starten")
+        label = tk.Label(
+            self,
+            text="Bildeingabe"
+        )
         label.grid(row=0, column=0)
 
         image_label = tk.Label(self)
@@ -31,7 +34,15 @@ class ImageInputPage(tk.Frame):
         )
         start_camera_button.grid(row=0, column=1)
 
-        self.ctrl.connect_page(self, image_label)
+        send_image_button = tk.Button(
+            button_frame,
+            text="Übernehmen",
+            command=lambda:
+                self.ctrl.send_image()
+        )
+        send_image_button.grid(row=0, column=2)
+
+        self.ctrl.connect_page(self, image_label, start_camera_button)
 
     def before_hide(self):
         self.ctrl.before_hide()

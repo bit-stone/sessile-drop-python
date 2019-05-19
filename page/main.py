@@ -6,18 +6,21 @@ from ctrl.toolbar_ctrl import ToolbarController
 
 from ctrl.image_input_ctrl import ImageInputController
 from ctrl.start_ctrl import StartController
+from ctrl.baseline_ctrl import BaselineController
 
 # pages
 from page.toolbar import Toolbar
 
 from page.image_input import ImageInputPage
 from page.start import StartPage
+from page.baseline import BaselinePage
 
 # page tuple
 # (page, ctrl)
 page_modules = [
     (ImageInputPage, ImageInputController),
-    (StartPage, StartController)
+    (StartPage, StartController),
+    (BaselinePage, BaselineController)
 ]
 
 

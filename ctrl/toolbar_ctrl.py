@@ -1,5 +1,6 @@
 from page.image_input import ImageInputPage
 from page.start import StartPage
+from page.baseline import BaselinePage
 
 
 class ToolbarController:
@@ -20,4 +21,6 @@ class ToolbarController:
         page = StartPage
         if(page_label == "image_input"):
             page = ImageInputPage
+        elif(page_label == "baseline"):
+            page = BaselinePage
         self.main_ctrl.show_page(page)
