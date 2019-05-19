@@ -36,7 +36,7 @@ class SessileDropApp(tk.Tk):
         self.toolbar_ctrl = ToolbarController(self.main_ctrl)
 
         self.title("Sessile Drop Analysis")
-        self.geometry("800x600")
+        self.geometry("1280x720")
 
         self.columnconfigure(0, weight=5)
         self.columnconfigure(1, weight=1)

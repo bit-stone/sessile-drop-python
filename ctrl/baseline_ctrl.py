@@ -14,6 +14,21 @@ class BaselineController:
         self.image_tk = None
         self.scale_factor = 1.0
 
+        self.click_state = "needle_crop"
+
+        # positions in respect to scaled canvas
+        # used to draw lines / rects
+        self.baseline_coords = (0, 0, 0, 0)
+        self.drop_crop_coords = (0, 0, 0, 0)
+        self.needle_crop_coords = (0, 0, 0, 0)
+
+        # values in respect to the original image
+        self.original = {
+            "baseline": (0, 0, 0, 0),
+            "drop_crop": (0, 0, 0, 0),
+            "needle_crop": (0, 0, 0, 0)
+        }
+
     def connect_page(self, page, canvas, canvas_refs):
         self.page = page
         self.canvas = canvas
@@ -49,9 +64,20 @@ class BaselineController:
                 self.refs["image"],
                 image=self.image_tk
             )
+        # end if image not None
+    # end before_show
 
-        def handle_click(self, evt):
-            pass
+    def handle_click(self, evt):
+        pass
 
-        def handle_move(self, evt):
-            pass
+    def handle_move(self, evt):
+        pos = self.get_scaled_coords(evt)
+        self.canvas.coords(
+            self.refs["baseline"],
+            (0, 0, pos["x"], pos["y"])
+        )
+
+    def get_scaled_coords(self, evt):
+        mx = int(evt.x * ((1.0) / self.scale_factor))
+        my = int(evt.y * ((1.0) / self.scale_factor))
+        return {"x": mx, "y": my}
