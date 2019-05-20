@@ -1,6 +1,7 @@
 from page.image_input import ImageInputPage
 from page.start import StartPage
 from page.baseline import BaselinePage
+from page.edge_detection import EdgeDetectionPage
 
 
 class ToolbarController:
@@ -23,4 +24,6 @@ class ToolbarController:
             page = ImageInputPage
         elif(page_label == "baseline"):
             page = BaselinePage
+        elif(page_label == "edge_detection"):
+            page = EdgeDetectionPage
         self.main_ctrl.show_page(page)

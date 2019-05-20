@@ -7,6 +7,7 @@ from ctrl.toolbar_ctrl import ToolbarController
 from ctrl.image_input_ctrl import ImageInputController
 from ctrl.start_ctrl import StartController
 from ctrl.baseline_ctrl import BaselineController
+from ctrl.edge_detection_ctrl import EdgeDetectionController
 
 # pages
 from page.toolbar import Toolbar
@@ -14,13 +15,15 @@ from page.toolbar import Toolbar
 from page.image_input import ImageInputPage
 from page.start import StartPage
 from page.baseline import BaselinePage
+from page.edge_detection import EdgeDetectionPage
 
 # page tuple
 # (page, ctrl)
 page_modules = [
     (ImageInputPage, ImageInputController),
     (StartPage, StartController),
-    (BaselinePage, BaselineController)
+    (BaselinePage, BaselineController),
+    (EdgeDetectionPage, EdgeDetectionController)
 ]
 
 

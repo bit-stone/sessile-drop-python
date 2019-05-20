@@ -6,7 +6,7 @@ class BaselinePage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        self.canvas = tk.Canvas(self, width=500, height=282)
+        self.canvas = tk.Canvas(self, width=500, height=282, cursor='cross')
         self.canvas.grid(row=0, column=0)
 
         self.canvas_image = self.canvas.create_image((0, 0), anchor="nw")
@@ -22,6 +22,19 @@ class BaselinePage(tk.Frame):
 
         self.button_frame = tk.Frame(self)
         self.button_frame.grid(row=1, column=0)
+
+        self.reset_button = tk.Button(
+            self.button_frame,
+            text="Erneut zuschneiden",
+            command=ctrl.reset_lines
+        )
+        self.reset_button.grid(row=0, column=0)
+
+        self.next_button = tk.Button(
+            self.button_frame,
+            text="Übernehmen"
+        )
+        self.next_button.grid(row=0, column=1)
 
         self.ctrl.connect_page(
             self,

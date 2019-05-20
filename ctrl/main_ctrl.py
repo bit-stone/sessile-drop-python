@@ -5,6 +5,9 @@ class MainController:
         self.original_image = None
         self.original_tk_image = None
 
+        self.drop_image = None
+        self.needle_image = None
+
     def init_pages(self, pages):
         self.pages = pages
     # end init_pages

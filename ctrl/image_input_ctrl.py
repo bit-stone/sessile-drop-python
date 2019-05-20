@@ -4,6 +4,7 @@ from tkinter import filedialog
 import tkinter as tk
 
 from page.start import StartPage
+from page.baseline import BaselinePage
 
 IMAGE_INPUT_FRAME_WIDTH = 1280
 IMAGE_INPUT_FRAME_HEIGHT = 720
@@ -125,5 +126,6 @@ class ImageInputController:
     def send_image(self):
         if(self.image is not None):
             self.main_ctrl.set_original_image(self.image)
+            self.main_ctrl.show_page(BaselinePage)
         else:
             print("no image to send")

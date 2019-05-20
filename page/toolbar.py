@@ -27,12 +27,19 @@ class Toolbar(tk.Frame):
         )
         baseline_button.grid(row=0, column=2, sticky="nw")
 
+        edge_button = tk.Button(
+            self,
+            text="Kantenerkennung",
+            command=lambda: self.ctrl.show_page("edge_detection")
+        )
+        edge_button.grid(row=0, column=3, sticky="nw")
+
         fitting_button = tk.Button(
             self,
             text="Fitting",
             command=lambda: self.ctrl.show_page("fitting")
         )
-        fitting_button.grid(row=0, column=3)
+        fitting_button.grid(row=0, column=4)
 
         self.ctrl.connect_page(self)
 
