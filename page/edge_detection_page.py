@@ -1,4 +1,5 @@
 import tkinter as tk
+import settings
 
 
 class EdgeDetectionPage(tk.Frame):
@@ -38,6 +39,7 @@ class EdgeDetectionPage(tk.Frame):
             sliderlength=20,
             length=150
         )
+        self.top_scale.set(settings.SOBEL_DEFAULT_TOP)
         self.top_scale.grid(row=0, column=0)
 
         self.bottom_scale = tk.Scale(
@@ -48,6 +50,7 @@ class EdgeDetectionPage(tk.Frame):
             sliderlength=20,
             length=150
         )
+        self.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
         self.bottom_scale.grid(row=0, column=1)
 
         self.button_frame = tk.Frame(self)

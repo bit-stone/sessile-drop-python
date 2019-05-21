@@ -3,14 +3,9 @@ from PIL import Image, ImageTk
 from tkinter import filedialog
 import tkinter as tk
 
+import settings
+
 from page.baseline_page import BaselinePage
-
-IMAGE_INPUT_FRAME_WIDTH = 1280
-IMAGE_INPUT_FRAME_HEIGHT = 720
-
-IMAGE_CANVAS_WIDTH = 500
-
-IMAGE_INPUT_FRAME_DELAY = 20
 
 
 class ImageInputController:
@@ -48,11 +43,11 @@ class ImageInputController:
             self.camera = cv2.VideoCapture(0)
             self.camera.set(
                 cv2.CAP_PROP_FRAME_WIDTH,
-                IMAGE_INPUT_FRAME_WIDTH
+                settings.IMAGE_INPUT_FRAME_WIDTH
             )
             self.camera.set(
                 cv2.CAP_PROP_FRAME_HEIGHT,
-                IMAGE_INPUT_FRAME_HEIGHT
+                settings.IMAGE_INPUT_FRAME_HEIGHT
             )
             if(self.camera.get(cv2.CAP_PROP_FPS) < 1.0):
                 raise Exception("no camera found")
@@ -68,7 +63,7 @@ class ImageInputController:
             self.camera = None
 
         if(self.camera is None):
-            print("test")
+            print("no camera present. disable camera button")
             self.start_camera_button.config(state=tk.DISABLED)
 
         return self.camera is not None
@@ -98,7 +93,7 @@ class ImageInputController:
             )
             self.output_widget.configure(image=self.image_tk)
             self.output_widget.after(
-                IMAGE_INPUT_FRAME_DELAY,
+                settings.IMAGE_INPUT_FRAME_DELAY,
                 self.update_camera_output
             )
 
@@ -114,9 +109,12 @@ class ImageInputController:
                 ("all files", "*.*")
             )
         )
-        self.image = Image.open(file_name)
-        self.image_tk = ImageTk.PhotoImage(image=self.image.resize((500, 282)))
-        self.output_widget.configure(image=self.image_tk)
+        if(isinstance(file_name, str) is True):
+            self.image = Image.open(file_name)
+            self.image_tk = ImageTk.PhotoImage(
+                image=self.image.resize((500, 282))
+            )
+            self.output_widget.configure(image=self.image_tk)
 
     def send_image(self):
         if(self.image is not None):

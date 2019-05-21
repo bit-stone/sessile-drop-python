@@ -1,6 +1,8 @@
 from PIL import Image, ImageTk
+import settings
 
 from components.edge_detection import EdgeDetection
+
 
 class EdgeDetectionController:
     def __init__(self, main_ctrl):
@@ -38,22 +40,31 @@ class EdgeDetectionController:
             self.page.top_scale.config(
                 label="Top"
             )
+            self.page.top_scale.set(settings.SOBEL_DEFAULT_TOP)
             self.page.bottom_scale.config(
                 label="Bottom"
             )
+            self.page.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
             self.page.bottom_scale.grid()
         elif(method == "bw_threshold_linear"):
             # show only left scale, labeled threshold
             self.page.top_scale.config(
                 label="Threshold"
             )
+            self.page.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
             self.page.bottom_scale.grid_remove()
     # end update_scales
 
     def draw_output_image(self, image):
         if(image is not None):
+            scale_factor = 1.0
+            if(image.size[0] > 500):
+                scale_factor = 500 / image.size[0]
+
+            width = int(image.size[0] * scale_factor)
+            height = int(image.size[1] * scale_factor)
             self.drop_tk_image = ImageTk.PhotoImage(
-                image=image.resize((500, 282))
+                image=image.resize((width, height))
             )
             self.output_widget.configure(
                 image=self.drop_tk_image

@@ -28,6 +28,7 @@ class EdgeDetection:
         grey_image,
         threshold
     ):
+        # turn gray into bw image
         bw_image = grey_image.point(
             lambda x: 0 if x < threshold else 255, "1"
         )
@@ -35,5 +36,8 @@ class EdgeDetection:
         bw_values = np.uint8(bw_values).reshape(
             (grey_image.size[1], grey_image.size[0])
         )
+
+        # detect edges
+        # TODO
 
         return bw_values
