@@ -1,7 +1,8 @@
-from page.image_input import ImageInputPage
-from page.start import StartPage
-from page.baseline import BaselinePage
-from page.edge_detection import EdgeDetectionPage
+from page.image_input_page import ImageInputPage
+from page.baseline_page import BaselinePage
+from page.edge_detection_page import EdgeDetectionPage
+from page.fitting_page import FittingPage
+from page.result_page import ResultPage
 
 
 class ToolbarController:
@@ -19,11 +20,15 @@ class ToolbarController:
         pass
 
     def show_page(self, page_label):
-        page = StartPage
+        page = ImageInputPage
         if(page_label == "image_input"):
             page = ImageInputPage
         elif(page_label == "baseline"):
             page = BaselinePage
         elif(page_label == "edge_detection"):
             page = EdgeDetectionPage
+        elif(page_label == "fitting"):
+            page = FittingPage
+        elif(page_label == "result"):
+            page = ResultPage
         self.main_ctrl.show_page(page)

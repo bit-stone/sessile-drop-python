@@ -6,6 +6,12 @@ class EdgeDetectionPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
+        label = tk.Label(
+            self,
+            text="Kantenerkennung Methode und Vorschau"
+        )
+        label.grid(row=0, column=0)
+
         self.ctrl.connect_page(self)
     # end __init__
 

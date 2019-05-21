@@ -32,7 +32,8 @@ class BaselinePage(tk.Frame):
 
         self.next_button = tk.Button(
             self.button_frame,
-            text="Übernehmen"
+            text="Übernehmen",
+            command=ctrl.send_images
         )
         self.next_button.grid(row=0, column=1)
 

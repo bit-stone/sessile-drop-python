@@ -1,17 +1,10 @@
 import tkinter as tk
 
 
-class Toolbar(tk.Frame):
+class ToolbarPage(tk.Frame):
     def __init__(self, parent, ctrl):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
-
-        start_page_button = tk.Button(
-            self,
-            text="Start",
-            command=lambda: self.ctrl.show_page("start")
-        )
-        start_page_button.grid(row=0, column=0, sticky="nw")
 
         image_input_button = tk.Button(
             self,
@@ -40,6 +33,13 @@ class Toolbar(tk.Frame):
             command=lambda: self.ctrl.show_page("fitting")
         )
         fitting_button.grid(row=0, column=4)
+
+        result_page_button = tk.Button(
+            self,
+            text="Ergebnis",
+            command=lambda: self.ctrl.show_page("result")
+        )
+        result_page_button.grid(row=0, column=5, sticky="nw")
 
         self.ctrl.connect_page(self)
 

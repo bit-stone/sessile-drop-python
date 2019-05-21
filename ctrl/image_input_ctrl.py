@@ -3,8 +3,7 @@ from PIL import Image, ImageTk
 from tkinter import filedialog
 import tkinter as tk
 
-from page.start import StartPage
-from page.baseline import BaselinePage
+from page.baseline_page import BaselinePage
 
 IMAGE_INPUT_FRAME_WIDTH = 1280
 IMAGE_INPUT_FRAME_HEIGHT = 720
@@ -44,10 +43,6 @@ class ImageInputController:
     # **
     # ** end page stuff
     # **
-
-    def show_start_page(self):
-        self.main_ctrl.show_page(StartPage)
-
     def init_image_input(self):
         try:
             self.camera = cv2.VideoCapture(0)

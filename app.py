@@ -1,5 +1,5 @@
 # app
-from page.main import SessileDropApp
+from page.main_page import SessileDropApp
 
 # start
 app = SessileDropApp()

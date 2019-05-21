@@ -5,25 +5,28 @@ from ctrl.main_ctrl import MainController
 from ctrl.toolbar_ctrl import ToolbarController
 
 from ctrl.image_input_ctrl import ImageInputController
-from ctrl.start_ctrl import StartController
 from ctrl.baseline_ctrl import BaselineController
 from ctrl.edge_detection_ctrl import EdgeDetectionController
+from ctrl.fitting_ctrl import FittingController
+from ctrl.result_ctrl import ResultController
 
 # pages
-from page.toolbar import Toolbar
+from page.toolbar_page import ToolbarPage
 
-from page.image_input import ImageInputPage
-from page.start import StartPage
-from page.baseline import BaselinePage
-from page.edge_detection import EdgeDetectionPage
+from page.image_input_page import ImageInputPage
+from page.baseline_page import BaselinePage
+from page.edge_detection_page import EdgeDetectionPage
+from page.fitting_page import FittingPage
+from page.result_page import ResultPage
 
 # page tuple
 # (page, ctrl)
 page_modules = [
     (ImageInputPage, ImageInputController),
-    (StartPage, StartController),
     (BaselinePage, BaselineController),
-    (EdgeDetectionPage, EdgeDetectionController)
+    (EdgeDetectionPage, EdgeDetectionController),
+    (FittingPage, FittingController),
+    (ResultPage, ResultController)
 ]
 
 
@@ -39,13 +42,13 @@ class SessileDropApp(tk.Tk):
         self.toolbar_ctrl = ToolbarController(self.main_ctrl)
 
         self.title("Sessile Drop Analysis")
-        self.geometry("1280x720")
+        self.geometry("1350x850")
 
         self.columnconfigure(0, weight=5)
         self.columnconfigure(1, weight=1)
 
         # Toolbar Frame
-        self.button_frame = Toolbar(self, self.toolbar_ctrl)
+        self.button_frame = ToolbarPage(self, self.toolbar_ctrl)
         self.button_frame.grid(row=0, column=0, sticky="nw")
 
         self.test_button_frame = tk.Frame(self)
@@ -81,5 +84,5 @@ class SessileDropApp(tk.Tk):
             page_obj.grid_remove()
         # end for page, ctrl in page_modules
         self.main_ctrl.init_pages(self.pages)
-        self.main_ctrl.show_page(StartPage)
+        self.main_ctrl.show_page(ImageInputPage)
     # end __init__

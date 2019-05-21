@@ -1,6 +1,6 @@
 from PIL import ImageTk
 
-IMAGE_WIDTH = 1200
+IMAGE_WIDTH = 1280
 
 
 class BaselineController:
@@ -99,8 +99,6 @@ class BaselineController:
     # end handle_click
 
     def handle_move(self, evt):
-        pos = self.get_scaled_coords(evt)
-
         if(self.click_state == "drop_crop_2"):
             self.drop_crop_coords[2] = evt.x
             self.drop_crop_coords[3] = evt.y
@@ -147,6 +145,29 @@ class BaselineController:
         self.update_lines()
         self.click_state = "drop_crop_1"
     # end reset_lines
+
+    def send_images(self):
+        drop_image = None
+
+        # apply crop
+        dx = self.lines["drop_crop"][2] - self.lines["drop_crop"][0]
+        dy = self.lines["drop_crop"][3] - self.lines["drop_crop"][1]
+
+        if(dx != 0 and dy != 0):
+            drop_image = self.image.crop(
+                (
+                    self.lines["drop_crop"][0],
+                    self.lines["drop_crop"][1],
+                    self.lines["drop_crop"][2],
+                    self.lines["drop_crop"][3]
+                )
+            )
+            drop_image = drop_image.convert("L")
+
+        if(drop_image is not None):
+            drop_image.show()
+
+    # end send_images
 
     def get_scaled_coords(self, evt):
         mx = int(evt.x * ((1.0) / self.scale_factor))
