@@ -1,5 +1,7 @@
 from PIL import ImageTk
 
+from page.edge_detection_page import EdgeDetectionPage
+
 IMAGE_WIDTH = 1280
 
 
@@ -165,7 +167,8 @@ class BaselineController:
             drop_image = drop_image.convert("L")
 
         if(drop_image is not None):
-            drop_image.show()
+            self.main_ctrl.set_drop_image(drop_image)
+            self.main_ctrl.show_page(EdgeDetectionPage)
 
     # end send_images
 

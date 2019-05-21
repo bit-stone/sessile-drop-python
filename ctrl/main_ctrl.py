@@ -35,3 +35,11 @@ class MainController:
     def get_original_image(self):
         return self.original_image
     # end get_original_image
+
+    def set_drop_image(self, image):
+        self.drop_image = image
+    # end set_drop_image
+
+    def get_drop_image(self):
+        return self.drop_image
+    # end get_drop_image
