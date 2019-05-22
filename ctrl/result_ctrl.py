@@ -30,8 +30,7 @@ class ResultController:
             points[:, 0],
             marker=",",
             color="r",
-            s=1,
-            linewidth=1
+            s=1
         )
         self.plot.plot(
             baseline_x,

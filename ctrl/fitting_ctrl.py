@@ -6,6 +6,12 @@ class FittingController:
         self.page = None,
         self.main_ctrl = main_ctrl
 
+        self.left_angle = 0.0
+        self.right_angle = 0.0
+
+        self.left_contact_point = [0, 0]
+        self.right_contact_point = [0, 0]
+
     def connect_page(self, page):
         self.page = page
 
@@ -17,3 +23,6 @@ class FittingController:
 
     def request_fitting(self):
         self.main_ctrl.show_page(ResultPage)
+
+    def update_fitting_method(self, value):
+        print(value)
