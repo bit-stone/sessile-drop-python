@@ -21,7 +21,19 @@ class EdgeDetection:
             grey_values, top_threshold, bottom_threshold
         )
 
-        return np.uint8(result)
+        result = np.uint8(result)
+
+        result_points = np.argwhere(result > 10)
+
+        def flip_y(el):
+            return [grey_image.size[1] - el[0], el[1]]
+
+        result_points = np.array(list(map(flip_y, result_points)))
+
+        return {
+            "image": result,
+            "points": result_points
+        }
 
     def bw_threshold_linear(
         self,
@@ -40,4 +52,7 @@ class EdgeDetection:
         # detect edges
         # TODO
 
-        return bw_values
+        return {
+            "image": bw_values,
+            "points": None
+        }

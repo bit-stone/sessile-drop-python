@@ -3,6 +3,8 @@ import settings
 
 from components.edge_detection import EdgeDetection
 
+from page.fitting_page import FittingPage
+
 
 class EdgeDetectionController:
     def __init__(self, main_ctrl):
@@ -15,6 +17,8 @@ class EdgeDetectionController:
 
         self.drop_image = None
         self.drop_tk_image = None
+
+        self.result = None
 
     # end __init__
 
@@ -69,24 +73,33 @@ class EdgeDetectionController:
             self.output_widget.configure(
                 image=self.drop_tk_image
             )
+    # end draw_output_image
 
     def request_edge_detection(self):
         if(self.input_image is not None):
             method = self.page.method_var.get()
-            result = None
+            self.result = None
             if(method == "sobel_canny"):
-                result = self.edge_detection.sobel_canny(
+                self.result = self.edge_detection.sobel_canny(
                     self.input_image,
                     self.page.top_scale.get(),
                     self.page.bottom_scale.get()
                 )
             elif(method == "bw_threshold_linear"):
-                result = self.edge_detection.bw_threshold_linear(
+                self.result = self.edge_detection.bw_threshold_linear(
                     self.input_image,
                     self.page.top_scale.get()
                 )
 
-            if(result is not None):
-                self.drop_image = Image.fromarray(result, mode="L")
+            if(self.result is not None):
+                self.drop_image = Image.fromarray(
+                    self.result["image"],
+                    mode="L"
+                )
                 self.draw_output_image(self.drop_image)
     # end request_edge_detection
+
+    def send_data(self):
+        if(self.result["points"] is not None):
+            self.main_ctrl.set_edge_points(self.result["points"])
+            self.main_ctrl.show_page(FittingPage)

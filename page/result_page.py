@@ -11,7 +11,7 @@ class ResultPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.figure = Figure(figsize=(10, 6), dpi=100)
         self.plot = self.figure.add_subplot(111)
 
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)

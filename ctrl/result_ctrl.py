@@ -1,4 +1,4 @@
-from numpy import arange, sin, pi
+import numpy as np
 
 
 class ResultController:
@@ -18,13 +18,27 @@ class ResultController:
         pass
 
     def before_show(self):
-        self.count += 0.1
-        t = arange(0.0, 3.0, 0.01)
-        s = sin(2 * pi * t) * self.count
+        points = self.main_ctrl.get_edge_points()
+        baseline = self.main_ctrl.get_baseline()
+        drop_image_width = self.main_ctrl.get_drop_image().size[0]
+
+        baseline_x = np.arange(0, drop_image_width, 1)
 
         self.plot.cla()
-        self.plot.plot(t, s)
+        self.plot.scatter(
+            points[:, 1],
+            points[:, 0],
+            marker=",",
+            color="r",
+            s=1,
+            linewidth=1
+        )
+        self.plot.plot(
+            baseline_x,
+            baseline.get_value(baseline_x)
+        )
         self.plot.set_title("Tk Embed")
+        self.plot.axis("scaled")
 
         self.canvas.draw()
 

@@ -1,3 +1,6 @@
+from page.result_page import ResultPage
+
+
 class FittingController:
     def __init__(self, main_ctrl):
         self.page = None,
@@ -11,3 +14,6 @@ class FittingController:
 
     def before_show(self):
         pass
+
+    def request_fitting(self):
+        self.main_ctrl.show_page(ResultPage)

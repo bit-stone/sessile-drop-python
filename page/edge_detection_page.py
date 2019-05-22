@@ -63,7 +63,11 @@ class EdgeDetectionPage(tk.Frame):
         )
         self.test_button.grid(row=0, column=0)
 
-        self.test_button = tk.Button(self.button_frame, text="Übernehmen")
+        self.test_button = tk.Button(
+            self.button_frame,
+            text="Übernehmen",
+            command=self.ctrl.send_data
+        )
         self.test_button.grid(row=0, column=1)
 
         self.ctrl.connect_page(self)

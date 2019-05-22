@@ -12,6 +12,13 @@ class FittingPage(tk.Frame):
         )
         label.grid(row=0, column=0)
 
+        next_button = tk.Button(
+            self,
+            text="Fitting durchführen",
+            command=self.ctrl.request_fitting
+        )
+        next_button.grid(row=1, column=0)
+
         self.ctrl.connect_page(self)
 
     def before_hide(self):

@@ -1,5 +1,5 @@
 from PIL import ImageTk
-
+from components.baseline import Baseline
 from page.edge_detection_page import EdgeDetectionPage
 
 IMAGE_WIDTH = 1280
@@ -24,12 +24,9 @@ class BaselineController:
         self.drop_crop_coords = [0, 0, 0, 0]
         self.needle_crop_coords = [0, 0, 0, 0]
 
-        # values in respect to the original image
-        self.lines = {
-            "baseline": [0, 0, 0, 0],
-            "drop_crop": [0, 0, 0, 0],
-            "needle_crop": [0, 0, 0, 0]
-        }
+        self.drop_crop = [0, 0, 0, 0]
+        self.drop_crop_height = 0
+        self.baseline = Baseline()
 
     def connect_page(self, page, canvas, canvas_refs):
         self.page = page
@@ -73,29 +70,48 @@ class BaselineController:
 
     def handle_click(self, evt):
         pos = self.get_scaled_coords(evt)
-        print(self.click_state)
+        image_height = self.image.size[1]
         if(self.click_state == "drop_crop_1"):
-            self.lines["drop_crop"] = [pos["x"], pos["y"], pos["x"], pos["y"]]
+            self.drop_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
             self.drop_crop_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
             self.click_state = "drop_crop_2"
         elif(self.click_state == "drop_crop_2"):
-            self.lines["drop_crop"][2] = pos["x"]
-            self.lines["drop_crop"][3] = pos["y"]
+            self.drop_crop[2] = pos["x"]
+            self.drop_crop[3] = pos["y"]
             self.drop_crop_coords[2] = evt.x
             self.drop_crop_coords[3] = evt.y
+            self.drop_crop_height = abs(
+                int(self.drop_crop[3] - self.drop_crop[1])
+            )
             self.update_lines()
             self.click_state = "baseline_1"
         elif(self.click_state == "baseline_1"):
-            self.lines["baseline"] = [pos["x"], pos["y"], pos["x"], pos["y"]]
+            self.baseline.set_first_point(
+                [
+                    pos["x"] - self.drop_crop[0],
+                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                ]
+            )
+            self.baseline.set_second_point(
+                [
+                    pos["x"] - self.drop_crop[0],
+                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                ]
+            )
             self.baseline_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
             self.click_state = "baseline_2"
         elif(self.click_state == "baseline_2"):
-            self.lines["baseline"][2] = pos["x"]
-            self.lines["baseline"][3] = pos["y"]
+            self.baseline.set_second_point(
+                [
+                    pos["x"] - self.drop_crop[0],
+                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                ]
+            )
             self.baseline_coords[2] = evt.x
             self.baseline_coords[3] = evt.y
+            self.baseline.calculate_params()
             self.update_lines()
             self.click_state = ""
     # end handle_click
@@ -152,22 +168,23 @@ class BaselineController:
         drop_image = None
 
         # apply crop
-        dx = self.lines["drop_crop"][2] - self.lines["drop_crop"][0]
-        dy = self.lines["drop_crop"][3] - self.lines["drop_crop"][1]
+        dx = self.drop_crop[2] - self.drop_crop[0]
+        dy = self.drop_crop[3] - self.drop_crop[1]
 
         if(dx != 0 and dy != 0):
             drop_image = self.image.crop(
                 (
-                    self.lines["drop_crop"][0],
-                    self.lines["drop_crop"][1],
-                    self.lines["drop_crop"][2],
-                    self.lines["drop_crop"][3]
+                    self.drop_crop[0],
+                    self.drop_crop[1],
+                    self.drop_crop[2],
+                    self.drop_crop[3]
                 )
             )
             drop_image = drop_image.convert("L")
 
         if(drop_image is not None):
             self.main_ctrl.set_drop_image(drop_image)
+            self.main_ctrl.set_baseline(self.baseline)
             self.main_ctrl.show_page(EdgeDetectionPage)
 
     # end send_images
