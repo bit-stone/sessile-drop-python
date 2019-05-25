@@ -19,6 +19,9 @@ IMAGE_INPUT_FRAME_DELAY = 50
 # Threshold for bw_threshold_linear method
 BW_DEFAULT_THRESHOLD = 60
 
+# Threshold for edge on black/white image
+BW_LINEAR_THRESHOLD = 70
+
 # top/bottom threshold for sobel_canny
 SOBEL_DEFAULT_TOP = 250
 SOBEL_DEFAULT_BOTTOM = 50
