@@ -11,6 +11,8 @@ class MainController:
         self.baseline = None
 
         self.drop_edge_points = None
+        self.left_points = None
+        self.right_points = None
 
     def init_pages(self, pages):
         self.pages = pages
@@ -63,3 +65,13 @@ class MainController:
     def get_baseline(self):
         return self.baseline
     # end get_baseline
+
+    def set_fitting_points(self, left_points, right_points):
+        self.left_points = left_points
+        self.right_points = right_points
+
+    def get_fitting_points(self):
+        return {
+            "left": self.left_points,
+            "right": self.right_points
+        }

@@ -22,6 +22,8 @@ class ResultController:
         baseline = self.main_ctrl.get_baseline()
         drop_image_width = self.main_ctrl.get_drop_image().size[0]
 
+        fitting_points = self.main_ctrl.get_fitting_points()
+
         baseline_x = np.arange(0, drop_image_width, 1)
 
         self.plot.cla()
@@ -30,6 +32,20 @@ class ResultController:
             points[:, 0],
             marker=",",
             color="r",
+            s=1
+        )
+        self.plot.scatter(
+            fitting_points["left"][:, 1],
+            fitting_points["left"][:, 0],
+            marker=",",
+            color="b",
+            s=1
+        )
+        self.plot.scatter(
+            fitting_points["right"][:, 1],
+            fitting_points["right"][:, 0],
+            marker=",",
+            color="b",
             s=1
         )
         self.plot.plot(
