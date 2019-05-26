@@ -57,16 +57,30 @@ class ResultController:
             baseline_x,
             baseline.get_value(baseline_x)
         )
-        self.plot.plot(
-            left_x,
-            fit_result["left_1d"](left_x),
-            color="#00ffff"
-        )
-        self.plot.plot(
-            right_x,
-            fit_result["right_1d"](right_x),
-            color="#00ffff"
-        )
+
+        if(fit_result["flipped"]):
+            self.plot.plot(
+                fit_result["left_1d"](left_x),
+                left_x,
+                color="g"
+            )
+            self.plot.plot(
+                fit_result["right_1d"](right_x),
+                right_x,
+                color="y"
+            )
+        else:
+            self.plot.plot(
+                left_x,
+                fit_result["left_1d"](left_x),
+                color="g"
+            )
+            self.plot.plot(
+                right_x,
+                fit_result["right_1d"](right_x),
+                color="y"
+            )
+
         self.plot.grid(
             True
         )

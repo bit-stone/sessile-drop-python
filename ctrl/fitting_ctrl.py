@@ -33,12 +33,13 @@ class FittingController:
         # filter only points above baseline
         # el[0] -> y  - - el[1] -> x
         print(baseline)
+
         def is_above(el):
             return el[0] >= baseline.get_value(el[1])
 
         bool_arr = np.array([is_above(row) for row in points])
         baseline_points = points[bool_arr]
-        print(baseline_points)
+        # print(baseline_points)
         print("Basislinie Punkte: ", len(baseline_points))
         print(len(points))
 

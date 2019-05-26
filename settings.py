@@ -27,7 +27,10 @@ SOBEL_DEFAULT_TOP = 250
 SOBEL_DEFAULT_BOTTOM = 50
 
 
-
 # ### Fitting ######################
 # ## Fitting Tangent 1
+# order of polynom fitted to left/right points
 FT1_POLYNOM_ORDER = 3
+# ratio of height to width over which coords should
+# be flipped for better fitting performance
+FT1_FLIP_THRESHOLD = (3.0/8.0)
