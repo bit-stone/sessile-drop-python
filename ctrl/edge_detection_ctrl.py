@@ -34,7 +34,7 @@ class EdgeDetectionController:
     def before_show(self):
         self.update_scales("")
         self.input_image = self.main_ctrl.get_drop_image()
-        self.draw_output_image(self.input_image)
+        self.request_edge_detection()
     # end before_show
 
     def update_scales(self, value):
