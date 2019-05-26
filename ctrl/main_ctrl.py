@@ -14,6 +14,8 @@ class MainController:
         self.left_points = None
         self.right_points = None
 
+        self.fit_result = None
+
     def init_pages(self, pages):
         self.pages = pages
     # end init_pages
@@ -75,3 +77,9 @@ class MainController:
             "left": self.left_points,
             "right": self.right_points
         }
+
+    def set_fit_result(self, fit_result):
+        self.fit_result = fit_result
+
+    def get_fit_result(self):
+        return self.fit_result

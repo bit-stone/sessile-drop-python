@@ -25,3 +25,9 @@ BW_LINEAR_THRESHOLD = 70
 # top/bottom threshold for sobel_canny
 SOBEL_DEFAULT_TOP = 250
 SOBEL_DEFAULT_BOTTOM = 50
+
+
+
+# ### Fitting ######################
+# ## Fitting Tangent 1
+FT1_POLYNOM_ORDER = 3

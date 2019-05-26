@@ -25,6 +25,11 @@ class ResultController:
         fitting_points = self.main_ctrl.get_fitting_points()
 
         baseline_x = np.arange(0, drop_image_width, 1)
+        left_x = np.arange(0, drop_image_width / 2, 1)
+        right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
+
+        fit_result = self.main_ctrl.get_fit_result()
+        print(fit_result)
 
         self.plot.cla()
         self.plot.scatter(
@@ -51,6 +56,19 @@ class ResultController:
         self.plot.plot(
             baseline_x,
             baseline.get_value(baseline_x)
+        )
+        self.plot.plot(
+            left_x,
+            fit_result["left_1d"](left_x),
+            color="#00ffff"
+        )
+        self.plot.plot(
+            right_x,
+            fit_result["right_1d"](right_x),
+            color="#00ffff"
+        )
+        self.plot.grid(
+            True
         )
         self.plot.set_title("Tk Embed")
         self.plot.axis("scaled")

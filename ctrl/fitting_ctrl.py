@@ -1,5 +1,7 @@
 import numpy as np
 
+from components.fitting_tangent_1 import FittingTangent1
+
 from page.result_page import ResultPage
 
 
@@ -56,6 +58,19 @@ class FittingController:
         print("Punkte rechts: ", len(right_points))
 
         self.main_ctrl.set_fitting_points(left_points, right_points)
+
+        # eigentliches Fitting ausführen
+        method = self.page.method_var.get()
+        fit_result = None
+
+        if(method == "tangent_1"):
+            fitter = FittingTangent1()
+            fit_result = fitter.request_fitting(left_points, right_points, baseline)
+        elif(method == "tangent_2"):
+            pass
+
+        if(fit_result is not None):
+            self.main_ctrl.set_fit_result(fit_result)
 
         self.main_ctrl.show_page(ResultPage)
 

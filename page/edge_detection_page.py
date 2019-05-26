@@ -17,7 +17,7 @@ class EdgeDetectionPage(tk.Frame):
         self.output_widget.grid(row=1, column=0)
 
         self.method_var = tk.StringVar(self)
-        self.method_var.set("sobel_canny")
+        self.method_var.set("bw_threshold_linear")
 
         self.method_selection = tk.OptionMenu(
             self,
