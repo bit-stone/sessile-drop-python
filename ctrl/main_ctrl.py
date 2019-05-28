@@ -2,6 +2,11 @@ class MainController:
     def __init__(self):
         self.current_page = None
 
+        self.test_series = [None]
+        self.test_index = 0
+
+        self.test_series_ctrl = None
+
         self.original_image = None
         self.original_tk_image = None
 
@@ -35,6 +40,11 @@ class MainController:
         self.current_page.before_show()
         page.grid()
     # end show_page
+
+    # need to connect to test series controller to update list
+    def connect_test_series_ctrl(self, test_series_ctrl):
+        self.test_series_ctrl = test_series_ctrl
+    # end connect_test_series_ctrl
 
     def set_original_image(self, image):
         self.original_image = image

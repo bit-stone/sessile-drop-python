@@ -2,7 +2,9 @@ import tkinter as tk
 
 # controllers
 from ctrl.main_ctrl import MainController
+
 from ctrl.toolbar_ctrl import ToolbarController
+from ctrl.test_series_ctrl import TestSeriesController
 
 from ctrl.image_input_ctrl import ImageInputController
 from ctrl.baseline_ctrl import BaselineController
@@ -12,6 +14,7 @@ from ctrl.result_ctrl import ResultController
 
 # pages
 from page.toolbar_page import ToolbarPage
+from page.test_series_page import TestSeriesPage
 
 from page.image_input_page import ImageInputPage
 from page.baseline_page import BaselinePage
@@ -40,6 +43,9 @@ class SessileDropApp(tk.Tk):
         # will be filled with pages later
         self.main_ctrl = MainController()
         self.toolbar_ctrl = ToolbarController(self.main_ctrl)
+        self.test_series_ctrl = TestSeriesController(self.main_ctrl)
+
+        self.main_ctrl.connect_test_series_ctrl(self.test_series_ctrl)
 
         self.title("Sessile Drop Analysis")
         self.geometry("1350x850")
@@ -51,19 +57,13 @@ class SessileDropApp(tk.Tk):
         self.button_frame = ToolbarPage(self, self.toolbar_ctrl)
         self.button_frame.grid(row=0, column=0, sticky="nw")
 
-        self.test_button_frame = tk.Frame(self)
-        self.test_button_frame.grid(row=0, column=1)
-
-        dummy_label = tk.Label(self.test_button_frame, text="Testreihe:")
-        dummy_label.grid(row=0, column=0)
-
         # main content frame (left)
         self.content_frame = tk.Frame(self)
         self.content_frame.grid(row=1, column=0, sticky="nesw")
 
         # test series frame (right)
-        self.test_series_frame = tk.Frame(self)
-        self.test_series_frame.grid(row=1, column=1, sticky="nesw")
+        self.test_series_frame = TestSeriesPage(self, self.test_series_ctrl)
+        self.test_series_frame.grid(row=0, column=1)
 
         self.pages = {}
         self.controllers = {}
