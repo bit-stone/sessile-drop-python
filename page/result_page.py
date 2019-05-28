@@ -22,6 +22,18 @@ class ResultPage(tk.Frame):
         label = tk.Label(self, text="Ergebnisse")
         label.grid(row=0, column=0)
 
+        label_frame = tk.Frame(self)
+        label_frame.grid(row=2, column=0)
+
+        self.left_angle_label = tk.Label(label_frame, text="Winkel links: 0°")
+        self.left_angle_label.grid(row=0, column=0)
+
+        self.avg_angle_label = tk.Label(label_frame, text="Mittlerer Winkel: 0°")
+        self.avg_angle_label.grid(row=0, column=1)
+
+        self.right_angle_label = tk.Label(label_frame, text="Rechter Winkel: 0°")
+        self.right_angle_label.grid(row=0, column=2)
+
         self.ctrl.connect_page(self, self.canvas, self.plot)
 
     def before_hide(self):

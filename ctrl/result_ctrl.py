@@ -1,5 +1,5 @@
 import numpy as np
-
+import math
 
 class ResultController:
     def __init__(self, main_ctrl):
@@ -58,28 +58,73 @@ class ResultController:
             baseline.get_value(baseline_x)
         )
 
+        print(fit_result)
+        vl = [50, 0]
+        vr = [-50, 0]
+        la = fit_result["left_angle"]
+        ra = fit_result["right_angle"]
+
+        # turn anti clockwise
+        left_vec = [
+            math.cos(-la) * vl[0] + math.sin(-la) * vl[1],
+            -math.sin(-la) * vl[0] + math.cos(-la) * vl[1]
+        ]
+
+        # turn clockwise
+        right_vec = [
+            math.cos(ra) * vr[0] + math.sin(ra) * vr[1],
+            -math.sin(ra) * vr[0] + math.cos(ra) * vr[1]
+        ]
+
+        # draw angles
+        X = [
+            fit_result["left_contact_point"][1],
+            fit_result["right_contact_point"][1]
+        ]
+
+        Y = [
+            fit_result["left_contact_point"][0],
+            fit_result["right_contact_point"][0]
+        ]
+
+        U = [
+            left_vec[0],
+            right_vec[0]
+        ]
+
+        V = [
+            left_vec[1],
+            right_vec[1]
+        ]
+
+        self.plot.quiver(
+            X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="y"
+        )
+
         if(fit_result["flipped"]):
-            self.plot.plot(
-                fit_result["left_1d"](left_x),
-                left_x,
-                color="g"
-            )
-            self.plot.plot(
-                fit_result["right_1d"](right_x),
-                right_x,
-                color="y"
-            )
+            # self.plot.plot(
+            #     fit_result["left_1d"](left_x),
+            #     left_x,
+            #     color="g"
+            # )
+            # self.plot.plot(
+            #     fit_result["right_1d"](right_x),
+            #     right_x,
+            #     color="y"
+            # )
+            pass
         else:
-            self.plot.plot(
-                left_x,
-                fit_result["left_1d"](left_x),
-                color="g"
-            )
-            self.plot.plot(
-                right_x,
-                fit_result["right_1d"](right_x),
-                color="y"
-            )
+            # self.plot.plot(
+            #     left_x,
+            #     fit_result["left_1d"](left_x),
+            #     color="g"
+            # )
+            # self.plot.plot(
+            #     right_x,
+            #     fit_result["right_1d"](right_x),
+            #     color="y"
+            # )
+            pass
 
         self.plot.grid(
             True
@@ -88,6 +133,12 @@ class ResultController:
         self.plot.axis("scaled")
 
         self.canvas.draw()
+
+        self.page.left_angle_label.config(text="Linker Winkel: {0:.2f}°".format(math.degrees(fit_result["left_angle"])))
+        self.page.right_angle_label.config(text="Rechter Winkel: {0:.2f}°".format(math.degrees(fit_result["right_angle"])))
+
+        avg_angle = (fit_result["left_angle"] + fit_result["right_angle"]) / 2.0
+        self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}°".format(math.degrees(avg_angle)))
 
     def update_label(self, label):
         label.config(text="Ich bin nur ein Test")
