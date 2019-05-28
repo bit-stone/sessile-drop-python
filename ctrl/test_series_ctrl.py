@@ -26,3 +26,9 @@ class TestSeriesController:
         if(len(index) > 0):
             self.page.list.delete(index)
         pass
+
+    def update_test_series(self):
+        self.page.list.delete(0, tk.END)
+
+        for test_item in self.main_ctrl.get_test_list():
+            print(test_item)

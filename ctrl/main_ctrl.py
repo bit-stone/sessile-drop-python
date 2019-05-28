@@ -41,6 +41,9 @@ class MainController:
         page.grid()
     # end show_page
 
+    def update_test_series(self):
+        self.test_series_ctrl.update_test_series()
+
     # need to connect to test series controller to update list
     def connect_test_series_ctrl(self, test_series_ctrl):
         self.test_series_ctrl = test_series_ctrl

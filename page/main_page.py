@@ -47,6 +47,8 @@ class SessileDropApp(tk.Tk):
 
         self.main_ctrl.connect_test_series_ctrl(self.test_series_ctrl)
 
+        # create first dummy test
+
         self.title("Sessile Drop Analysis")
         self.geometry("1350x850")
 
@@ -63,7 +65,7 @@ class SessileDropApp(tk.Tk):
 
         # test series frame (right)
         self.test_series_frame = TestSeriesPage(self, self.test_series_ctrl)
-        self.test_series_frame.grid(row=0, column=1)
+        self.test_series_frame.grid(row=0, column=1, rowspan=2)
 
         self.pages = {}
         self.controllers = {}
