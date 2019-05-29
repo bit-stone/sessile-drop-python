@@ -37,7 +37,14 @@ class ImageInputController:
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
-        print(test)
+        self.image = test.original_image
+        if(self.image is not None):
+            self.image_tk = ImageTk.PhotoImage(
+                image=self.image.resize((500, 282))
+            )
+            self.output_widget.configure(image=self.image_tk)
+        else:
+            self.output_widget.configure(image="")
 
     # **
     # ** end page stuff

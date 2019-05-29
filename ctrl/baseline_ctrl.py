@@ -70,12 +70,13 @@ class BaselineController:
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
+        if(test.baseline is not None):
+            self.baseline = test.baseline
+            self.drop_crop = test.drop_crop
         print(test)
-
 
     def handle_click(self, evt):
         pos = self.get_scaled_coords(evt)
-        image_height = self.image.size[1]
         if(self.click_state == "drop_crop_1"):
             self.drop_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
             self.drop_crop_coords = [evt.x, evt.y, evt.x, evt.y]

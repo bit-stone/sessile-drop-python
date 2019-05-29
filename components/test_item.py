@@ -1,9 +1,9 @@
 class TestItem:
-    def __init__(self, label = "Neuer Test"):
+    def __init__(self, label="Neuer Test"):
         self.label = label
         self.original_image = None
-        self.original_tk_image = None
 
+        self.drop_crop = [0, 0, 0, 0]
         self.drop_image = None
         self.baseline = None
 
