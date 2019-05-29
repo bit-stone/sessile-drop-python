@@ -35,6 +35,10 @@ class ImageInputController:
         if(self.camera is not None and self.camera.isOpened() is not True):
             self.init_image_input()
 
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        print(test)
+
     # **
     # ** end page stuff
     # **

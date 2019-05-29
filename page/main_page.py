@@ -45,8 +45,6 @@ class SessileDropApp(tk.Tk):
         self.toolbar_ctrl = ToolbarController(self.main_ctrl)
         self.test_series_ctrl = TestSeriesController(self.main_ctrl)
 
-        self.main_ctrl.connect_test_series_ctrl(self.test_series_ctrl)
-
         # create first dummy test
 
         self.title("Sessile Drop Analysis")
@@ -67,6 +65,8 @@ class SessileDropApp(tk.Tk):
         self.test_series_frame = TestSeriesPage(self, self.test_series_ctrl)
         self.test_series_frame.grid(row=0, column=1, rowspan=2)
 
+        self.main_ctrl.connect_test_series_ctrl(self.test_series_ctrl)
+
         self.pages = {}
         self.controllers = {}
         for (page, ctrl) in page_modules:
@@ -85,6 +85,6 @@ class SessileDropApp(tk.Tk):
             page_obj.grid(row=0, column=0)
             page_obj.grid_remove()
         # end for page, ctrl in page_modules
-        self.main_ctrl.init_pages(self.pages)
+        self.main_ctrl.init_page_list(self.pages)
         self.main_ctrl.show_page(ImageInputPage)
     # end __init__

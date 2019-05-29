@@ -25,6 +25,10 @@ class FittingController:
     def before_show(self):
         pass
 
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        print(test)
+
     def request_fitting(self):
         # get edge points
         points = self.main_ctrl.get_edge_points()

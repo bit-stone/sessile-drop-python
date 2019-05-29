@@ -6,23 +6,33 @@ class TestSeriesPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        title_label = tk.Label(self, text="Testreihe:")
-        title_label.grid(row=0, column=0)
+        # current test
+        current_label = tk.Label(self, text="Aktueller Test:")
+        current_label.grid(row=0, column=0)
 
-        self.remove_test_button = tk.Button(self, text="Entfernen")
-        self.remove_test_button.grid(row=1, column=0)
+        self.test_label = tk.Label(self, text="-")
+        self.test_label.grid(row=1, column=0)
+
+        # test list
+        title_label = tk.Label(self, text="Bisherige Tests:")
+        title_label.grid(row=10, column=0, pady=(50, 5))
 
         self.list = tk.Listbox(self)
-        self.list.insert(tk.END, "Test #1")
-        self.list.insert(tk.END, "Test #2")
-        self.list.insert(tk.END, "Test #3")
-        self.list.insert(tk.END, "Test #4")
-        self.list.grid(row=2, column=0)
+        self.list.grid(row=15, column=0)
 
-        self.activate_index(0)
+        # test list actions
+        self.show_test_button = tk.Button(self, text="Markierten Test öffnen")
+        self.show_test_button.grid(row=19, column=0)
 
-        self.add_test_button = tk.Button(self, text="+ Test")
-        self.add_test_button.grid(row=3, column=0)
+        self.remove_test_button = tk.Button(self, text="Markierten Test entfernen")
+        self.remove_test_button.grid(row=20, column=0)
+
+        # new test
+        self.new_test_entry = tk.Entry(self)
+        self.new_test_entry.grid(row=29, column=0, pady=(50, 5))
+
+        self.add_test_button = tk.Button(self, text="Neuen Test hinzufügen")
+        self.add_test_button.grid(row=30, column=0)
 
         self.ctrl.connect_page(self)
 
@@ -38,3 +48,6 @@ class TestSeriesPage(tk.Frame):
 
     def before_show(self):
         self.ctrl.before_show()
+
+    def update_data(self):
+        pass

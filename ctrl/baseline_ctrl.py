@@ -68,6 +68,11 @@ class BaselineController:
         # end if image not None
     # end before_show
 
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        print(test)
+
+
     def handle_click(self, evt):
         pos = self.get_scaled_coords(evt)
         image_height = self.image.size[1]

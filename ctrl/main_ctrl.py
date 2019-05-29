@@ -1,29 +1,24 @@
+from components.test_item import TestItem
+
+
 class MainController:
     def __init__(self):
+        self.page_list = None
         self.current_page = None
 
-        self.test_series = [None]
+        self.test_list = []
         self.test_index = 0
 
-        self.test_series_ctrl = None
+        self.test_list_ctrl = None
 
-        self.original_image = None
-        self.original_tk_image = None
-
-        self.drop_image = None
         self.needle_image = None
 
-        self.baseline = None
+        # create first dummy test
+        self.test_list.append(TestItem("Test #1"))
 
-        self.drop_edge_points = None
-        self.left_points = None
-        self.right_points = None
-
-        self.fit_result = None
-
-    def init_pages(self, pages):
-        self.pages = pages
-    # end init_pages
+    def init_page_list(self, page_list):
+        self.page_list = page_list
+    # end init_page_list
 
     def show_page(self, page_class):
         # this page is already shown
@@ -33,13 +28,18 @@ class MainController:
         # show the page and run before_hide/before_show
         if(self.current_page is not None):
             self.current_page.before_hide()
-        for page_index, page in self.pages.items():
+        for page_index, page in self.page_list.items():
             page.grid_remove()
-        page = self.pages[page_class]
+        page = self.page_list[page_class]
         self.current_page = page
         self.current_page.before_show()
         page.grid()
     # end show_page
+
+    def update_page_data(self):
+        if(self.page_list is not None):
+            for key, page in self.page_list.items():
+                page.update_data()
 
     def update_test_series(self):
         self.test_series_ctrl.update_test_series()
@@ -47,52 +47,77 @@ class MainController:
     # need to connect to test series controller to update list
     def connect_test_series_ctrl(self, test_series_ctrl):
         self.test_series_ctrl = test_series_ctrl
-    # end connect_test_series_ctrl
+        self.test_series_ctrl.update_test_series()
+        self.test_series_ctrl.page.activate_index(0)
+    # end connect_test_list_ctrl
+
+    def set_test_index_active(self, test_index):
+        self.test_index = test_index
+        self.update_test_series()
+    # end set_test_index_active
+
+    def get_test_index(self):
+        return self.test_index
+
+    def add_test(self, test):
+        self.test_list.append(test)
+    # end add_test
+
+    def get_test_list(self):
+        return self.test_list
+    # end get_test_list
+
+    def get_current_test_label(self):
+        return self.test_list[self.test_index].label
+    # end get_current_test_label
+
+    def get_current_test(self):
+        return self.test_list[self.test_index]
 
     def set_original_image(self, image):
-        self.original_image = image
+        self.test_list[self.test_index].original_image = image
     # end set_original_image
 
     def get_original_image(self):
-        return self.original_image
+        return self.test_list[self.test_index].original_image
     # end get_original_image
 
     def set_drop_image(self, image):
-        self.drop_image = image
+        self.test_list[self.test_index].drop_image = image
     # end set_drop_image
 
     def get_drop_image(self):
-        return self.drop_image
+        return self.test_list[self.test_index].drop_image
     # end get_drop_image
 
     def set_edge_points(self, points):
-        self.drop_edge_points = points
+        self.test_list[self.test_index].drop_edge_points = points
     # end set_edge_points
 
     def get_edge_points(self):
-        return self.drop_edge_points
+        return self.test_list[self.test_index].drop_edge_points
     # end get_edge_points
 
     def set_baseline(self, baseline):
-        self.baseline = baseline
+        self.test_list[self.test_index].baseline = baseline
     # end set_baseline
 
     def get_baseline(self):
-        return self.baseline
+        return self.test_list[self.test_index].baseline
     # end get_baseline
 
     def set_fitting_points(self, left_points, right_points):
-        self.left_points = left_points
-        self.right_points = right_points
+        self.test_list[self.test_index].left_points = left_points
+        self.test_list[self.test_index].right_points = right_points
 
     def get_fitting_points(self):
         return {
-            "left": self.left_points,
-            "right": self.right_points
+            "left": self.test_list[self.test_index].left_points,
+            "right": self.test_list[self.test_index].right_points
         }
 
     def set_fit_result(self, fit_result):
-        self.fit_result = fit_result
+        self.test_list[self.test_index].fit_result = fit_result
 
     def get_fit_result(self):
-        return self.fit_result
+        return self.test_list[self.test_index].fit_result

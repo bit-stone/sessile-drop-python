@@ -49,3 +49,6 @@ class ImageInputPage(tk.Frame):
 
     def before_show(self):
         self.ctrl.before_show()
+
+    def update_data(self):
+        self.ctrl.update_data()

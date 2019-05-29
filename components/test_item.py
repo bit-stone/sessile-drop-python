@@ -1,6 +1,6 @@
 class TestItem:
-    def __init__(self):
-        self.label = "Neuer Test"
+    def __init__(self, label = "Neuer Test"):
+        self.label = label
         self.original_image = None
         self.original_tk_image = None
 

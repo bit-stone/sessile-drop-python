@@ -37,6 +37,10 @@ class EdgeDetectionController:
         self.request_edge_detection()
     # end before_show
 
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        print(test)
+
     def update_scales(self, value):
         method = self.page.method_var.get()
         if(method == "sobel_canny"):

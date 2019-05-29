@@ -140,5 +140,9 @@ class ResultController:
         avg_angle = (fit_result["left_angle"] + fit_result["right_angle"]) / 2.0
         self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}°".format(math.degrees(avg_angle)))
 
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        print(test)
+
     def update_label(self, label):
         label.config(text="Ich bin nur ein Test")
