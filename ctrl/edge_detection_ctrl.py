@@ -32,10 +32,9 @@ class EdgeDetectionController:
     # end before_hide
 
     def before_show(self):
-        self.update_scales("")
-
-        self.input_image = self.main_ctrl.get_drop_image()
-        self.request_edge_detection()
+        if(self.input_image is None):
+            self.input_image = self.main_ctrl.get_drop_image()
+            self.request_edge_detection()
     # end before_show
 
     def update_data(self):
@@ -45,33 +44,40 @@ class EdgeDetectionController:
         if(params is not None):
             # set params
             self.page.method_var.set(params["method"])
-            self.update_scales("")
-            self.top_scale.set(params["top"])
-            self.bottom_scale.set(params["bottom"])
+            self.page.top_scale.set(params["top"])
+            self.page.bottom_scale.set(params["bottom"])
+            self.update_scales()
 
         self.input_image = test.drop_image
         if(self.input_image is not None):
             self.request_edge_detection()
 
-    def update_scales(self, value):
+    def update_detection_method(self, value):
+        method = self.page.method_var.get()
+        if(method == "sobel_canny"):
+            self.page.top_scale.set(settings.SOBEL_DEFAULT_TOP)
+            self.page.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
+        elif(method == "bw_threshold_linear"):
+            self.page.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
+        self.update_scales()
+    # end update_detection_method
+
+    def update_scales(self):
         method = self.page.method_var.get()
         if(method == "sobel_canny"):
             # show both scales, labeled top/bottom
             self.page.top_scale.config(
                 label="Top"
             )
-            self.page.top_scale.set(settings.SOBEL_DEFAULT_TOP)
             self.page.bottom_scale.config(
                 label="Bottom"
             )
-            self.page.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
             self.page.bottom_scale.grid()
         elif(method == "bw_threshold_linear"):
             # show only left scale, labeled threshold
             self.page.top_scale.config(
                 label="Threshold"
             )
-            self.page.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
             self.page.bottom_scale.grid_remove()
     # end update_scales
 

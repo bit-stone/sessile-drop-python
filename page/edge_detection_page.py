@@ -24,7 +24,7 @@ class EdgeDetectionPage(tk.Frame):
             self.method_var,
             "sobel_canny",
             "bw_threshold_linear",
-            command=self.ctrl.update_scales
+            command=self.ctrl.update_detection_method
         )
         self.method_selection.grid(row=2, column=0)
 
@@ -39,7 +39,7 @@ class EdgeDetectionPage(tk.Frame):
             sliderlength=20,
             length=150
         )
-        self.top_scale.set(settings.SOBEL_DEFAULT_TOP)
+        self.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
         self.top_scale.grid(row=0, column=0)
 
         self.bottom_scale = tk.Scale(
@@ -52,6 +52,7 @@ class EdgeDetectionPage(tk.Frame):
         )
         self.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
         self.bottom_scale.grid(row=0, column=1)
+        self.bottom_scale.grid_remove()
 
         self.button_frame = tk.Frame(self)
         self.button_frame.grid(row=4, column=0)
