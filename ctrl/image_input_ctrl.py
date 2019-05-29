@@ -39,10 +39,7 @@ class ImageInputController:
         test = self.main_ctrl.get_current_test()
         self.image = test.original_image
         if(self.image is not None):
-            self.image_tk = ImageTk.PhotoImage(
-                image=self.image.resize((500, 282))
-            )
-            self.output_widget.configure(image=self.image_tk)
+            self.update_image_output()
         else:
             self.output_widget.configure(image="")
 
@@ -99,10 +96,8 @@ class ImageInputController:
             # convert to grayscale
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             self.image = Image.fromarray(cv2image)
-            self.image_tk = ImageTk.PhotoImage(
-                image=self.image.resize((500, 282))
-            )
-            self.output_widget.configure(image=self.image_tk)
+            self.update_image_output()
+
             self.output_widget.after(
                 settings.IMAGE_INPUT_FRAME_DELAY,
                 self.update_camera_output
@@ -122,8 +117,16 @@ class ImageInputController:
         )
         if(isinstance(file_name, str) is True):
             self.image = Image.open(file_name)
+            self.update_image_output()
+
+    def update_image_output(self):
+        if(self.image is not None):
+            img_size = self.image.size
+            new_width = settings.STANDARD_IMAGE_WIDTH
+            new_height = int(settings.STANDARD_IMAGE_WIDTH * (img_size[1] / img_size[0]))
             self.image_tk = ImageTk.PhotoImage(
-                image=self.image.resize((500, 282))
+                image=self.image.resize((new_width, new_height))
+                # image=self.image.resize((500, 282))
             )
             self.output_widget.configure(image=self.image_tk)
 

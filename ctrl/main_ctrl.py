@@ -44,6 +44,9 @@ class MainController:
     def update_test_series(self):
         self.test_series_ctrl.update_test_series()
 
+    def delete_test(self, index):
+        del self.test_list[index]
+
     # need to connect to test series controller to update list
     def connect_test_series_ctrl(self, test_series_ctrl):
         self.test_series_ctrl = test_series_ctrl
@@ -123,6 +126,9 @@ class MainController:
             "left": self.test_list[self.test_index].left_points,
             "right": self.test_list[self.test_index].right_points
         }
+
+    def set_fit_method(self, fit_method):
+        self.test_list[self.test_index].fit_method = fit_method
 
     def set_fit_result(self, fit_result):
         self.test_list[self.test_index].fit_result = fit_result

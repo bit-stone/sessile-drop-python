@@ -3,6 +3,9 @@ from tkinter import messagebox
 
 from components.test_item import TestItem
 
+from page.image_input_page import ImageInputPage
+
+
 class TestSeriesController:
     def __init__(self, main_ctrl):
         self.main_ctrl = main_ctrl
@@ -32,16 +35,20 @@ class TestSeriesController:
             self.main_ctrl.set_test_index_active(new_index)
             self.main_ctrl.update_page_data()
             self.page.activate_index(new_index)
+            self.main_ctrl.show_page(ImageInputPage)
         else:
             messagebox.showinfo("Bitte einen Namen vergeben", "Bitte dem neuen Test einen Namen geben")
 
     def remove_active_test(self):
-        print(self.page.list.curselection())
-        confirm_delete = messagebox.askokcancel("Test entfernen", "Möchten Sie diesen Test wirklich entfernen? Er kann danach nicht wiederhergestellt werden.")
+        confirm_delete = messagebox.askokcancel(
+            "Test entfernen",
+            "Möchten Sie diesen Test wirklich entfernen? Er kann danach nicht wiederhergestellt werden."
+        )
         if(confirm_delete):
             index = self.page.list.curselection()
             if(len(index) > 0):
                 self.page.list.delete(index)
+                self.main_ctrl.delete_test(index[0])
         pass
 
     def open_active_test(self):

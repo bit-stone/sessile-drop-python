@@ -27,7 +27,12 @@ class FittingController:
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
-        print(test)
+        print("Vorherige Methode:")
+        print(test.fit_method)
+        if(test.fit_method is not None):
+            print("Setze Methode")
+            self.page.method_var.set(test.fit_method)
+            print(self.page.method_var.get())
 
     def request_fitting(self):
         # get edge points
@@ -72,9 +77,11 @@ class FittingController:
             fitter = FittingTangent1()
             fit_result = fitter.request_fitting(left_points, right_points, baseline)
         elif(method == "tangent_2"):
-            pass
+            fitter = FittingTangent1()
+            fit_result = fitter.request_fitting(left_points, right_points, baseline)
 
         if(fit_result is not None):
+            self.main_ctrl.set_fit_method(method)
             self.main_ctrl.set_fit_result(fit_result)
 
         self.main_ctrl.show_page(ResultPage)

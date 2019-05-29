@@ -18,131 +18,135 @@ class ResultController:
         pass
 
     def before_show(self):
-        points = self.main_ctrl.get_edge_points()
-        baseline = self.main_ctrl.get_baseline()
-        drop_image_width = self.main_ctrl.get_drop_image().size[0]
+        self.show_result_data()
 
-        fitting_points = self.main_ctrl.get_fitting_points()
+    def show_result_data(self):
+        if(self.main_ctrl.get_drop_image() is not None):
+            point_list = self.main_ctrl.get_edge_points()
+            baseline = self.main_ctrl.get_baseline()
+            drop_image_width = self.main_ctrl.get_drop_image().size[0]
 
-        baseline_x = np.arange(0, drop_image_width, 1)
-        left_x = np.arange(0, drop_image_width / 2, 1)
-        right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
+            fitting_points = self.main_ctrl.get_fitting_points()
 
-        fit_result = self.main_ctrl.get_fit_result()
-        print(fit_result)
+            baseline_x = np.arange(0, drop_image_width, 1)
+            left_x = np.arange(0, drop_image_width / 2, 1)
+            right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
 
-        self.plot.cla()
-        self.plot.scatter(
-            points[:, 1],
-            points[:, 0],
-            marker=",",
-            color="r",
-            s=1
-        )
-        self.plot.scatter(
-            fitting_points["left"][:, 1],
-            fitting_points["left"][:, 0],
-            marker=",",
-            color="b",
-            s=1
-        )
-        self.plot.scatter(
-            fitting_points["right"][:, 1],
-            fitting_points["right"][:, 0],
-            marker=",",
-            color="b",
-            s=1
-        )
-        self.plot.plot(
-            baseline_x,
-            baseline.get_value(baseline_x)
-        )
+            fit_result = self.main_ctrl.get_fit_result()
+            print(fit_result)
 
-        print(fit_result)
-        vl = [50, 0]
-        vr = [-50, 0]
-        la = fit_result["left_angle"]
-        ra = fit_result["right_angle"]
+            self.plot.cla()
+            self.plot.scatter(
+                point_list[:, 1],
+                point_list[:, 0],
+                marker=",",
+                color="r",
+                s=1
+            )
+            self.plot.scatter(
+                fitting_points["left"][:, 1],
+                fitting_points["left"][:, 0],
+                marker=",",
+                color="b",
+                s=1
+            )
+            self.plot.scatter(
+                fitting_points["right"][:, 1],
+                fitting_points["right"][:, 0],
+                marker=",",
+                color="b",
+                s=1
+            )
+            self.plot.plot(
+                baseline_x,
+                baseline.get_value(baseline_x)
+            )
 
-        # turn anti clockwise
-        left_vec = [
-            math.cos(-la) * vl[0] + math.sin(-la) * vl[1],
-            -math.sin(-la) * vl[0] + math.cos(-la) * vl[1]
-        ]
+            print(fit_result)
+            vl = [50, 0]
+            vr = [-50, 0]
+            la = fit_result["left_angle"]
+            ra = fit_result["right_angle"]
 
-        # turn clockwise
-        right_vec = [
-            math.cos(ra) * vr[0] + math.sin(ra) * vr[1],
-            -math.sin(ra) * vr[0] + math.cos(ra) * vr[1]
-        ]
+            # turn anti clockwise
+            left_vec = [
+                math.cos(-la) * vl[0] + math.sin(-la) * vl[1],
+                -math.sin(-la) * vl[0] + math.cos(-la) * vl[1]
+            ]
 
-        # draw angles
-        X = [
-            fit_result["left_contact_point"][1],
-            fit_result["right_contact_point"][1]
-        ]
+            # turn clockwise
+            right_vec = [
+                math.cos(ra) * vr[0] + math.sin(ra) * vr[1],
+                -math.sin(ra) * vr[0] + math.cos(ra) * vr[1]
+            ]
 
-        Y = [
-            fit_result["left_contact_point"][0],
-            fit_result["right_contact_point"][0]
-        ]
+            # draw angles
+            X = [
+                fit_result["left_contact_point"][1],
+                fit_result["right_contact_point"][1]
+            ]
 
-        U = [
-            left_vec[0],
-            right_vec[0]
-        ]
+            Y = [
+                fit_result["left_contact_point"][0],
+                fit_result["right_contact_point"][0]
+            ]
 
-        V = [
-            left_vec[1],
-            right_vec[1]
-        ]
+            U = [
+                left_vec[0],
+                right_vec[0]
+            ]
 
-        self.plot.quiver(
-            X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="y"
-        )
+            V = [
+                left_vec[1],
+                right_vec[1]
+            ]
 
-        if(fit_result["flipped"]):
-            # self.plot.plot(
-            #     fit_result["left_1d"](left_x),
-            #     left_x,
-            #     color="g"
-            # )
-            # self.plot.plot(
-            #     fit_result["right_1d"](right_x),
-            #     right_x,
-            #     color="y"
-            # )
-            pass
-        else:
-            # self.plot.plot(
-            #     left_x,
-            #     fit_result["left_1d"](left_x),
-            #     color="g"
-            # )
-            # self.plot.plot(
-            #     right_x,
-            #     fit_result["right_1d"](right_x),
-            #     color="y"
-            # )
-            pass
+            self.plot.quiver(
+                X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="y"
+            )
 
-        self.plot.grid(
-            True
-        )
-        self.plot.set_title("Tk Embed")
-        self.plot.axis("scaled")
+            if(fit_result["flipped"]):
+                # self.plot.plot(
+                #     fit_result["left_1d"](left_x),
+                #     left_x,
+                #     color="g"
+                # )
+                # self.plot.plot(
+                #     fit_result["right_1d"](right_x),
+                #     right_x,
+                #     color="y"
+                # )
+                pass
+            else:
+                # self.plot.plot(
+                #     left_x,
+                #     fit_result["left_1d"](left_x),
+                #     color="g"
+                # )
+                # self.plot.plot(
+                #     right_x,
+                #     fit_result["right_1d"](right_x),
+                #     color="y"
+                # )
+                pass
 
-        self.canvas.draw()
+            self.plot.grid(
+                True
+            )
+            self.plot.set_title("Tk Embed")
+            self.plot.axis("scaled")
 
-        self.page.left_angle_label.config(text="Linker Winkel: {0:.2f}°".format(math.degrees(fit_result["left_angle"])))
-        self.page.right_angle_label.config(text="Rechter Winkel: {0:.2f}°".format(math.degrees(fit_result["right_angle"])))
+            self.canvas.draw()
 
-        avg_angle = (fit_result["left_angle"] + fit_result["right_angle"]) / 2.0
-        self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}°".format(math.degrees(avg_angle)))
+            self.page.left_angle_label.config(text="Linker Winkel: {0:.2f}°".format(math.degrees(fit_result["left_angle"])))
+            self.page.right_angle_label.config(text="Rechter Winkel: {0:.2f}°".format(math.degrees(fit_result["right_angle"])))
+
+            avg_angle = (fit_result["left_angle"] + fit_result["right_angle"]) / 2.0
+            self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}°".format(math.degrees(avg_angle)))
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
-        print(test)
+        self.show_result_data()
 
     def update_label(self, label):
         label.config(text="Ich bin nur ein Test")

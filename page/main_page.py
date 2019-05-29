@@ -48,7 +48,7 @@ class SessileDropApp(tk.Tk):
         # create first dummy test
 
         self.title("Sessile Drop Analysis")
-        self.geometry("1350x850")
+        self.geometry("1600x900")
 
         self.columnconfigure(0, weight=5)
         self.columnconfigure(1, weight=1)

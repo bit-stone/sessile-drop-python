@@ -13,6 +13,9 @@ IMAGE_INPUT_FRAME_HEIGHT = 720
 # 60 fps => 1000 / 60 = 16 ms
 IMAGE_INPUT_FRAME_DELAY = 50
 
+# standard image width
+STANDARD_IMAGE_WIDTH = 1280
+
 
 # #### Default settings for edge detection
 # #

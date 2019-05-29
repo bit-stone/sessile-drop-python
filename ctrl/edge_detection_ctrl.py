@@ -32,9 +32,9 @@ class EdgeDetectionController:
     # end before_hide
 
     def before_show(self):
-        if(self.input_image is None):
-            self.input_image = self.main_ctrl.get_drop_image()
-            self.request_edge_detection()
+        # if(self.input_image is not None):
+        self.input_image = self.main_ctrl.get_drop_image()
+        self.request_edge_detection()
     # end before_show
 
     def update_data(self):
@@ -51,6 +51,8 @@ class EdgeDetectionController:
         self.input_image = test.drop_image
         if(self.input_image is not None):
             self.request_edge_detection()
+        else:
+            self.output_widget.configure(image="")
 
     def update_detection_method(self, value):
         method = self.page.method_var.get()
@@ -84,8 +86,8 @@ class EdgeDetectionController:
     def draw_output_image(self, image):
         if(image is not None):
             scale_factor = 1.0
-            if(image.size[0] > 500):
-                scale_factor = 500 / image.size[0]
+            if(image.size[0] > settings.STANDARD_IMAGE_WIDTH):
+                scale_factor = settings.STANDARD_IMAGE_WIDTH / image.size[0]
 
             width = int(image.size[0] * scale_factor)
             height = int(image.size[1] * scale_factor)
