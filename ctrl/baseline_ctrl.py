@@ -43,11 +43,50 @@ class BaselineController:
 
     def before_show(self):
         self.image = self.main_ctrl.get_original_image()
+        self.show_image()
+    # end before_show
+
+    def update_data(self):
+        test = self.main_ctrl.get_current_test()
+        # show image first to get scale_factor
+        if(test.original_image is not None):
+            self.image = test.original_image
+        else:
+            self.image = None
+        self.show_image()
+
+        # show lines and rects
+        if(test.baseline is not None):
+            self.baseline = test.baseline
+            self.drop_crop = test.drop_crop
+
+            b1 = self.get_rescaled_baseline_coords(
+                self.baseline.first_point, self.drop_crop
+            )
+            b2 = self.get_rescaled_baseline_coords(
+                self.baseline.second_point, self.drop_crop
+            )
+
+            self.baseline_coords = [
+                b1[0], b1[1], b2[0], b2[1]
+            ]
+
+            self.drop_crop_coords = self.get_rescaled_drop_coords(
+                self.drop_crop
+            )
+
+            self.update_lines()
+        else:
+            self.reset_lines()
+
+    def show_image(self):
         if(self.image is not None):
             if(self.image.size[0] > IMAGE_WIDTH):
                 self.scale_factor = IMAGE_WIDTH / self.image.size[0]
             else:
                 self.scale_factor = 1.0
+
+            print("Skalierung: ", self.scale_factor)
 
             new_width = int(self.image.size[0] * self.scale_factor)
             new_height = int(self.image.size[1] * self.scale_factor)
@@ -65,15 +104,16 @@ class BaselineController:
                 self.refs["image"],
                 image=self.image_tk
             )
+        else:
+            self.canvas.config(
+                width=100,
+                height=100
+            )
+            self.canvas.itemconfig(
+                self.refs["image"],
+                image=""
+            )
         # end if image not None
-    # end before_show
-
-    def update_data(self):
-        test = self.main_ctrl.get_current_test()
-        if(test.baseline is not None):
-            self.baseline = test.baseline
-            self.drop_crop = test.drop_crop
-        print(test)
 
     def handle_click(self, evt):
         pos = self.get_scaled_coords(evt)
@@ -190,6 +230,7 @@ class BaselineController:
 
         if(drop_image is not None):
             self.main_ctrl.set_drop_image(drop_image)
+            self.main_ctrl.set_drop_crop(self.drop_crop)
             self.main_ctrl.set_baseline(self.baseline)
             self.main_ctrl.show_page(EdgeDetectionPage)
 
@@ -200,3 +241,20 @@ class BaselineController:
         my = int(evt.y * ((1.0) / self.scale_factor))
         return {"x": mx, "y": my}
     # end get_scaled_coords
+
+    def get_rescaled_baseline_coords(self, point, drop_crop):
+        dch = drop_crop[3] - drop_crop[1]
+        return (
+            int((point[0] + drop_crop[0]) * self.scale_factor),
+            int(((dch - point[1]) + drop_crop[1]) * self.scale_factor)
+        )
+    # end get_rescaled_baseline_coords
+
+    def get_rescaled_drop_coords(self, drop_crop):
+        return [
+            int(drop_crop[0] * self.scale_factor),
+            int(drop_crop[1] * self.scale_factor),
+            int(drop_crop[2] * self.scale_factor),
+            int(drop_crop[3] * self.scale_factor)
+        ]
+    # end get_rescaled_drop_coords

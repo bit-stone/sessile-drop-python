@@ -106,6 +106,10 @@ class MainController:
         return self.test_list[self.test_index].baseline
     # end get_baseline
 
+    def set_drop_crop(self, drop_crop):
+        self.test_list[self.test_index].drop_crop = drop_crop
+    # end set_drop_crop
+
     def set_fitting_points(self, left_points, right_points):
         self.test_list[self.test_index].left_points = left_points
         self.test_list[self.test_index].right_points = right_points
