@@ -110,6 +110,10 @@ class MainController:
         self.test_list[self.test_index].drop_crop = drop_crop
     # end set_drop_crop
 
+    def set_edge_params(self, edge_params):
+        self.test_list[self.test_index].edge_params = edge_params
+    # end set_edge_params
+
     def set_fitting_points(self, left_points, right_points):
         self.test_list[self.test_index].left_points = left_points
         self.test_list[self.test_index].right_points = right_points

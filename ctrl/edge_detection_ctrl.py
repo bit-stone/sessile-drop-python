@@ -33,13 +33,25 @@ class EdgeDetectionController:
 
     def before_show(self):
         self.update_scales("")
+
         self.input_image = self.main_ctrl.get_drop_image()
         self.request_edge_detection()
     # end before_show
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
-        print(test)
+
+        params = test.edge_params
+        if(params is not None):
+            # set params
+            self.page.method_var.set(params["method"])
+            self.update_scales("")
+            self.top_scale.set(params["top"])
+            self.bottom_scale.set(params["bottom"])
+
+        self.input_image = test.drop_image
+        if(self.input_image is not None):
+            self.request_edge_detection()
 
     def update_scales(self, value):
         method = self.page.method_var.get()
@@ -106,4 +118,9 @@ class EdgeDetectionController:
     def send_data(self):
         if(self.result["points"] is not None):
             self.main_ctrl.set_edge_points(self.result["points"])
+            self.main_ctrl.set_edge_params({
+                "method": self.page.method_var.get(),
+                "top": self.page.top_scale.get(),
+                "bottom": self.page.bottom_scale.get()
+            })
             self.main_ctrl.show_page(FittingPage)

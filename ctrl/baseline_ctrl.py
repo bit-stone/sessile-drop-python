@@ -77,6 +77,7 @@ class BaselineController:
 
             self.update_lines()
         else:
+            self.baseline = Baseline()
             self.reset_lines()
 
     def show_image(self):
