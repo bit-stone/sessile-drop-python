@@ -3,6 +3,7 @@ import math
 import numpy.linalg as npla
 import settings
 
+
 class FittingTangent1:
     def __init__(self):
         self.left_points = None
@@ -108,10 +109,10 @@ class FittingTangent1:
         print("Rechts: ", math.degrees(right_angle))
 
         return {
-            "left": left_result,
-            "right": right_result,
-            "left_1d": left_result1d,
-            "right_1d": right_result1d,
+            # "left": left_result,
+            # "right": right_result,
+            # "left_1d": left_result1d,
+            # "right_1d": right_result1d,
             "left_angle": left_angle,
             "right_angle": right_angle,
             "left_contact_point": left_point,
