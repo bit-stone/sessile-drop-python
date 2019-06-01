@@ -52,8 +52,14 @@ class FittingTangent1:
         right_points = np.array(list(map(shift_right, self.right_points)))
 
         print("Nach Shifting:")
-        self.left_points = left_points[-settings.FT1_POINT_COUNT:]
-        self.right_points = right_points[-settings.FT1_POINT_COUNT:]
+        self.left_points = left_points[left_points[:, 0].argsort()]
+        self.right_points = right_points[right_points[:, 0].argsort()]
+
+        self.left_points = self.left_points[:settings.FT1_POINT_COUNT]
+        self.right_points = self.right_points[:settings.FT1_POINT_COUNT]
+
+        # self.left_points = left_points[-settings.FT1_POINT_COUNT:]
+        # self.right_points = right_points[-settings.FT1_POINT_COUNT:]
 
         # print("Links: ", left_point)
         # print("Rechts: ", right_point)

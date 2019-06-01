@@ -19,8 +19,11 @@ class FittingTangent2:
 
     def request_fitting(self, left_points, right_points, baseline):
         # reduce number of points
-        self.left_points = left_points[-settings.FT2_POINT_COUNT:]
-        self.right_points = right_points[-settings.FT2_POINT_COUNT:]
+        self.left_points = left_points[left_points[:, 0].argsort()]
+        self.right_points = right_points[right_points[:, 0].argsort()]
+
+        self.left_points = self.left_points[:settings.FT2_POINT_COUNT]
+        self.right_points = self.right_points[:settings.FT2_POINT_COUNT]
         self.baseline = baseline
 
         # extract x and y values
