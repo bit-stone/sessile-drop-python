@@ -2,6 +2,7 @@ import numpy as np
 
 from components.fitting_tangent_1 import FittingTangent1
 from components.fitting_circle import FittingCircle
+from components.fitting_tangent_2 import FittingTangent2
 
 from page.result_page import ResultPage
 
@@ -79,6 +80,9 @@ class FittingController:
             fit_result = fitter.request_fitting(left_points, right_points, baseline)
         elif(method == "circle"):
             fitter = FittingCircle()
+            fit_result = fitter.request_fitting(left_points, right_points, baseline)
+        elif(method == "tangent_2"):
+            fitter = FittingTangent2()
             fit_result = fitter.request_fitting(left_points, right_points, baseline)
 
         if(fit_result is not None):

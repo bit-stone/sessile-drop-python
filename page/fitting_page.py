@@ -20,6 +20,7 @@ class FittingPage(tk.Frame):
             self.method_var,
             "tangent_1",
             "circle",
+            "tangent_2",
             command=self.ctrl.update_fitting_method
         )
         self.method_selection.grid(row=1, column=0)

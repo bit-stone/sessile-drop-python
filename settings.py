@@ -31,9 +31,24 @@ SOBEL_DEFAULT_BOTTOM = 50
 
 
 # ### Fitting ######################
+
 # ## Fitting Tangent 1
 # order of polynom fitted to left/right points
 FT1_POLYNOM_ORDER = 3
 # ratio of height to width over which coords should
 # be flipped for better fitting performance
 FT1_FLIP_THRESHOLD = (3.0/8.0)
+# number of points for fitting
+FT1_POINT_COUNT = 50
+
+# ## Fitting Tangent 2
+# order of polynom fitted to left/right points
+FT2_POLYNOM_ORDER = 3
+# number of points for fitting
+FT2_POINT_COUNT = 50
+# offset for binary search
+FT2_BIN_SEARCH_OFFSET = 20
+# max number of binary steps
+FT2_BIN_SEARCH_MAX_COUNT = 50
+# desired binary search distance
+FT2_BIN_SEARCH_DELTA_X = 0.0001

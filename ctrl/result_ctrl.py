@@ -47,14 +47,14 @@ class ResultController:
                 fitting_points["left"][:, 1],
                 fitting_points["left"][:, 0],
                 marker=",",
-                color="b",
+                color="y",
                 s=1
             )
             self.plot.scatter(
                 fitting_points["right"][:, 1],
                 fitting_points["right"][:, 0],
                 marker=",",
-                color="b",
+                color="y",
                 s=1
             )
             self.plot.plot(
@@ -63,8 +63,8 @@ class ResultController:
             )
 
             print(fit_result)
-            vl = [50, 0]
-            vr = [-50, 0]
+            vl = [50, baseline.m * 50]
+            vr = [-50, -baseline.m * 50]
             la = fit_result["left_angle"]
             ra = fit_result["right_angle"]
 
@@ -102,7 +102,7 @@ class ResultController:
             ]
 
             self.plot.quiver(
-                X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="y"
+                X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="b"
             )
 
             if(fit_result["flipped"]):
