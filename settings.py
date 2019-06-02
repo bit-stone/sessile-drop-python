@@ -47,7 +47,7 @@ FT2_POLYNOM_ORDER = 3
 # number of points for fitting
 FT2_POINT_COUNT = 50
 # offset for binary search
-FT2_BIN_SEARCH_OFFSET = 20
+FT2_BIN_SEARCH_OFFSET = 50
 # max number of binary steps
 FT2_BIN_SEARCH_MAX_COUNT = 50
 # desired binary search distance
