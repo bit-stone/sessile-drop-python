@@ -11,8 +11,6 @@ class MainController:
 
         self.test_list_ctrl = None
 
-        self.needle_image = None
-
         # create first dummy test
         self.test_list.append(TestItem("Test #1"))
 
@@ -92,6 +90,22 @@ class MainController:
     def get_drop_image(self):
         return self.test_list[self.test_index].drop_image
     # end get_drop_image
+
+    def set_needle_image(self, image):
+        self.test_list[self.test_index].needle_image = image
+    # end set_drop_image
+
+    def get_needle_image(self):
+        return self.test_list[self.test_index].needle_image
+    # end get_drop_image
+
+    def set_needle_data(self, needle_data):
+        self.test_list[self.test_index].needle_data = needle_data
+    # end set_needle_data
+
+    def get_needle_data(self):
+        return self.test_list[self.test_index].needle_data
+    # end get_needle_data
 
     def set_edge_points(self, points):
         self.test_list[self.test_index].drop_edge_points = points

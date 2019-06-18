@@ -29,6 +29,11 @@ BW_LINEAR_THRESHOLD = 70
 SOBEL_DEFAULT_TOP = 250
 SOBEL_DEFAULT_BOTTOM = 50
 
+# values for needle detection.
+# these should be different from drop values
+# as the needle usually is easily detected
+SOBEL_NEEDLE_TOP = 230
+SOBEL_NEEDLE_BOTTOM = 100
 
 # ### Fitting ######################
 
@@ -47,7 +52,7 @@ FT2_POLYNOM_ORDER = 3
 # number of points for fitting
 FT2_POINT_COUNT = 50
 # offset for binary search
-FT2_BIN_SEARCH_OFFSET = 50
+FT2_BIN_SEARCH_OFFSET = 10
 # max number of binary steps
 FT2_BIN_SEARCH_MAX_COUNT = 50
 # desired binary search distance

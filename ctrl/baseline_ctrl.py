@@ -226,6 +226,15 @@ class BaselineController:
                 self.needle_crop_coords[3]
             )
         )
+
+        if(self.click_state == "needle_crop_1" or self.click_state == "needle_crop_2"):
+            self.page.help_label.config(text="Nadelausschnitt setzen")
+        elif(self.click_state == "drop_crop_1" or self.click_state == "drop_crop_2"):
+            self.page.help_label.config(text="Tropfenausschnitt setzen")
+        elif(self.click_state == "baseline_1" or self.click_state == "baseline_2"):
+            self.page.help_label.config(text="Basisilinie setzen")
+        else:
+            self.page.help_label.config(text="Fertig")
     # end update_lines
 
     def reset_lines(self):
@@ -244,6 +253,7 @@ class BaselineController:
 
     def send_images(self):
         drop_image = None
+        needle_image = None
 
         # apply crop
         dx = self.drop_crop[2] - self.drop_crop[0]
@@ -260,9 +270,25 @@ class BaselineController:
             )
             drop_image = drop_image.convert("L")
 
-        if(drop_image is not None):
+        dx = self.needle_crop[2] - self.needle_crop[0]
+        dy = self.needle_crop[3] - self.needle_crop[1]
+
+        if(dx != 0 and dy != 0):
+            needle_image = self.image.crop(
+                (
+                    self.needle_crop[0],
+                    self.needle_crop[1],
+                    self.needle_crop[2],
+                    self.needle_crop[3]
+                )
+            )
+            needle_image = needle_image.convert("L")
+
+        # send images
+        if(drop_image is not None and needle_image is not None):
             self.main_ctrl.set_drop_image(drop_image)
             self.main_ctrl.set_drop_crop(self.drop_crop)
+            self.main_ctrl.set_needle_image(needle_image)
             self.main_ctrl.set_needle_crop(self.needle_crop)
             self.main_ctrl.set_baseline(self.baseline)
             self.main_ctrl.show_page(EdgeDetectionPage)

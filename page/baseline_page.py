@@ -20,8 +20,11 @@ class BaselinePage(tk.Frame):
             (0, 0, 0, 0), outline="green"
         )
 
+        self.help_label = tk.Label(self, text="Start")
+        self.help_label.grid(row=1, column=0)
+
         self.button_frame = tk.Frame(self)
-        self.button_frame.grid(row=1, column=0)
+        self.button_frame.grid(row=2, column=0)
 
         self.reset_button = tk.Button(
             self.button_frame,

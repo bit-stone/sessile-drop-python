@@ -8,7 +8,8 @@ class TestItem:
         self.drop_image = None
         self.baseline = None
         self.needle_crop = [0, 0, 0, 0]
-        self.needle_width = None
+        self.needle_image = None
+        self.needle_data = None
 
         self.drop_edge_points = None
         self.left_points = None

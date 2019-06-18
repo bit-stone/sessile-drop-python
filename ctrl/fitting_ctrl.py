@@ -25,7 +25,14 @@ class FittingController:
         pass
 
     def before_show(self):
-        pass
+        needle_data = self.main_ctrl.get_needle_data()
+        if(needle_data is not None):
+            self.page.needle_width_label.config(
+                text="Breite: {0:.2f}px".format(needle_data["width"])
+            )
+            self.page.needle_angle_label.config(
+                text="Winkel: {0:.2f}°".format(needle_data["angle_degrees"])
+            )
 
     def update_data(self):
         test = self.main_ctrl.get_current_test()
