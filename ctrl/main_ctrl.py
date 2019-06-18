@@ -113,6 +113,10 @@ class MainController:
         self.test_list[self.test_index].drop_crop = drop_crop
     # end set_drop_crop
 
+    def set_needle_crop(self, needle_crop):
+        self.test_list[self.test_index].needle_crop = needle_crop
+    # end set_needle_crop
+
     def set_edge_params(self, edge_params):
         self.test_list[self.test_index].edge_params = edge_params
     # end set_edge_params

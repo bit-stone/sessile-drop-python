@@ -7,6 +7,8 @@ class TestItem:
         self.drop_crop = [0, 0, 0, 0]
         self.drop_image = None
         self.baseline = None
+        self.needle_crop = [0, 0, 0, 0]
+        self.needle_width = None
 
         self.drop_edge_points = None
         self.left_points = None
@@ -16,3 +18,6 @@ class TestItem:
 
         self.fit_method = None
         self.fit_result = None
+
+    def is_finished(self):
+        return self.fit_result is not None

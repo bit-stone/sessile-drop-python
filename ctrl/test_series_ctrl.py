@@ -16,6 +16,7 @@ class TestSeriesController:
         self.page.add_test_button.config(command=self.add_test)
         self.page.remove_test_button.config(command=self.remove_active_test)
         self.page.show_test_button.config(command=self.open_active_test)
+        self.page.series_result_button.config(command=self.show_series_result)
 
     def before_show(self):
         pass
@@ -68,3 +69,24 @@ class TestSeriesController:
             self.page.list.insert(tk.END, test_item.label)
 
         self.page.test_label.config(text=self.main_ctrl.get_current_test_label())
+
+    def show_series_result(self):
+        try:
+            # check whether needle diameter is set
+            try:
+                needle_diameter = float(self.page.needle_entry.get())
+            except ValueError:
+                raise ValueError("Bitte einen gültigen Nadeldurchmesser in mm angeben (Format 1.234)")
+
+            # need at least one test
+            test_list = self.main_ctrl.get_test_list()
+            if(len(test_list) < 1):
+                raise ValueError("Bitte mindestens einen Test hinzufügen")
+
+            # check all tests for readiness (must all be finished)
+            for test in test_list:
+                if(test.is_finished() is not True):
+                    raise ValueError("Alle Tests müssen abgeschlossen sein. " + test.label + " ist noch nicht abgeschlossen")
+
+        except ValueError as err:
+            messagebox.showinfo("Fehler", err)

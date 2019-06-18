@@ -21,7 +21,8 @@ class ResultController:
         self.show_result_data()
 
     def show_result_data(self):
-        if(self.main_ctrl.get_drop_image() is not None):
+        if(self.main_ctrl.get_drop_image() is not None
+            and self.main_ctrl.get_fit_result() is not None):
             point_list = self.main_ctrl.get_edge_points()
             baseline = self.main_ctrl.get_baseline()
             drop_image_width = self.main_ctrl.get_drop_image().size[0]
@@ -33,7 +34,6 @@ class ResultController:
             right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
 
             fit_result = self.main_ctrl.get_fit_result()
-            print(fit_result)
 
             self.plot.cla()
             self.plot.scatter(
@@ -62,7 +62,6 @@ class ResultController:
                 baseline.get_value(baseline_x)
             )
 
-            print(fit_result)
             vl = [50, baseline.m * 50]
             vr = [-50, -baseline.m * 50]
             la = fit_result["left_angle"]

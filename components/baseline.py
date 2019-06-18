@@ -1,5 +1,8 @@
 class Baseline:
     def __init__(self):
+        self.reset_points()
+
+    def reset_points(self):
         self.first_point = [0, 0]
         self.second_point = [0, 0]
         self.m = 0.0

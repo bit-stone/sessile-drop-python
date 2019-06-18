@@ -16,7 +16,7 @@ class BaselineController:
         self.image_tk = None
         self.scale_factor = 1.0
 
-        self.click_state = "drop_crop_1"
+        self.click_state = "needle_crop_1"
 
         # positions in respect to scaled canvas
         # used to draw lines / rects
@@ -25,6 +25,7 @@ class BaselineController:
         self.needle_crop_coords = [0, 0, 0, 0]
 
         self.drop_crop = [0, 0, 0, 0]
+        self.needle_crop = [0, 0, 0, 0]
         self.drop_crop_height = 0
         self.baseline = Baseline()
 
@@ -59,6 +60,7 @@ class BaselineController:
         if(test.baseline is not None):
             self.baseline = test.baseline
             self.drop_crop = test.drop_crop
+            self.needle_crop = test.needle_crop
 
             b1 = self.get_rescaled_baseline_coords(
                 self.baseline.first_point, self.drop_crop
@@ -73,6 +75,10 @@ class BaselineController:
 
             self.drop_crop_coords = self.get_rescaled_drop_coords(
                 self.drop_crop
+            )
+
+            self.needle_crop_coords = self.get_rescaled_drop_coords(
+                self.needle_crop
             )
 
             self.update_lines()
@@ -118,7 +124,20 @@ class BaselineController:
 
     def handle_click(self, evt):
         pos = self.get_scaled_coords(evt)
-        if(self.click_state == "drop_crop_1"):
+
+        if(self.click_state == "needle_crop_1"):
+            self.needle_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
+            self.needle_crop_coords = [evt.x, evt.y, evt.x, evt.y]
+            self.update_lines()
+            self.click_state = "needle_crop_2"
+        elif(self.click_state == "needle_crop_2"):
+            self.needle_crop[2] = pos["x"]
+            self.needle_crop[3] = pos["y"]
+            self.needle_crop_coords[2] = evt.x
+            self.needle_crop_coords[3] = evt.y
+            self.update_lines()
+            self.click_state = "drop_crop_1"
+        elif(self.click_state == "drop_crop_1"):
             self.drop_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
             self.drop_crop_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
@@ -164,7 +183,10 @@ class BaselineController:
     # end handle_click
 
     def handle_move(self, evt):
-        if(self.click_state == "drop_crop_2"):
+        if(self.click_state == "needle_crop_2"):
+            self.needle_crop_coords[2] = evt.x
+            self.needle_crop_coords[3] = evt.y
+        elif(self.click_state == "drop_crop_2"):
             self.drop_crop_coords[2] = evt.x
             self.drop_crop_coords[3] = evt.y
         elif(self.click_state == "baseline_2"):
@@ -194,6 +216,16 @@ class BaselineController:
                 self.baseline_coords[3],
             )
         )
+
+        self.canvas.coords(
+            self.refs["needle_crop"],
+            (
+                self.needle_crop_coords[0],
+                self.needle_crop_coords[1],
+                self.needle_crop_coords[2],
+                self.needle_crop_coords[3]
+            )
+        )
     # end update_lines
 
     def reset_lines(self):
@@ -202,13 +234,12 @@ class BaselineController:
         self.needle_crop_coords = [0, 0, 0, 0]
 
         # values in respect to the original image
-        self.lines = {
-            "baseline": [0, 0, 0, 0],
-            "drop_crop": [0, 0, 0, 0],
-            "needle_crop": [0, 0, 0, 0]
-        }
+        self.drop_crop = [0, 0, 0, 0]
+        self.needle_crop = [0, 0, 0, 0]
+        self.baseline.reset_points()
+
         self.update_lines()
-        self.click_state = "drop_crop_1"
+        self.click_state = "needle_crop_1"
     # end reset_lines
 
     def send_images(self):
@@ -232,6 +263,7 @@ class BaselineController:
         if(drop_image is not None):
             self.main_ctrl.set_drop_image(drop_image)
             self.main_ctrl.set_drop_crop(self.drop_crop)
+            self.main_ctrl.set_needle_crop(self.needle_crop)
             self.main_ctrl.set_baseline(self.baseline)
             self.main_ctrl.show_page(EdgeDetectionPage)
 
