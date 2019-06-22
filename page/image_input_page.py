@@ -8,7 +8,8 @@ class ImageInputPage(tk.Frame):
 
         label = tk.Label(
             self,
-            text="Bildeingabe"
+            text="Bildeingabe",
+            font=("", 15)
         )
         label.grid(row=0, column=0)
 

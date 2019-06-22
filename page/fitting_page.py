@@ -6,7 +6,7 @@ class FittingPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        needle_label = tk.Label(self, text="Nadel Parameter: ")
+        needle_label = tk.Label(self, text="Erkannte Nadel-Parameter: ")
         needle_label.grid(row=0, column=0)
 
         self.needle_width_label = tk.Label(self, text="")
@@ -15,9 +15,27 @@ class FittingPage(tk.Frame):
         self.needle_angle_label = tk.Label(self, text="")
         self.needle_angle_label.grid(row=2, column=0)
 
+        fluid_label = tk.Label(
+            self,
+            text="Verwendete Flüssigkeit:"
+        )
+        fluid_label.grid(row=7, column=0, pady=(50, 5))
+
+        self.fluid_var = tk.StringVar(self)
+        self.fluid_var.set("")
+
+        # set in connect_page to fill it with fluid data!
+        # self.fluid_selection = tk.OptionMenu(
+        #     self,
+        #     self.fluid_var,
+        #     "",
+        #     command=self.ctrl.update_fluid
+        # )
+        # self.fluid_selection.grid(row=8, column=0)
+
         label = tk.Label(
             self,
-            text="Fitting-Parameter und Methode"
+            text="Fitting-Methode:"
         )
         label.grid(row=9, column=0, pady=(50, 5))
 

@@ -1,5 +1,5 @@
 from components.test_item import TestItem
-
+import csv
 
 class MainController:
     def __init__(self):
@@ -11,8 +11,23 @@ class MainController:
 
         self.test_list_ctrl = None
 
+        # read fluids.csv
+        self.fluids = []
+        with open("fluids.csv") as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=";")
+            first = True
+            for row in csv_reader:
+                if(not first):
+                    self.fluids.append(row)
+                else:
+                    first = False
+
+        # print(self.fluids)
+
         # create first dummy test
         self.test_list.append(TestItem("Test #1"))
+
+
 
     def init_page_list(self, page_list):
         self.page_list = page_list
@@ -153,3 +168,9 @@ class MainController:
 
     def get_fit_result(self):
         return self.test_list[self.test_index].fit_result
+
+    def get_fluids(self):
+        return self.fluids
+
+    def get_fluid_data(self, name):
+        pass

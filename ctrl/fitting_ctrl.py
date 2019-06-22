@@ -1,4 +1,5 @@
 import numpy as np
+import tkinter as tk
 
 from components.fitting_tangent_1 import FittingTangent1
 from components.fitting_circle import FittingCircle
@@ -20,6 +21,19 @@ class FittingController:
 
     def connect_page(self, page):
         self.page = page
+
+        fluids = self.main_ctrl.get_fluids()
+        fluid_options = []
+        for row in fluids:
+            fluid_options.append(row[0])
+
+        self.page.fluid_selection = tk.OptionMenu(
+            self.page,
+            self.page.fluid_var,
+            *fluid_options,
+            command=self.update_fluid
+        )
+        self.page.fluid_selection.grid(row=8, column=0)
 
     def before_hide(self):
         pass
@@ -100,3 +114,6 @@ class FittingController:
 
     def update_fitting_method(self, value):
         print(value)
+
+    def update_fluid(self, value):
+        print("Gewählte Flüssigkeit: " + value)
