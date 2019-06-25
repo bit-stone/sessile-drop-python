@@ -3,6 +3,7 @@ import numpy as np
 import math
 import numpy.linalg as npla
 import settings
+from tkinter import messagebox
 
 from components.edge_detection import EdgeDetection
 
@@ -39,13 +40,6 @@ class EdgeDetectionController:
     # end before_hide
 
     def before_show(self):
-        # if(self.input_image is not None):
-        self.input_drop_image = self.main_ctrl.get_drop_image()
-        self.input_needle_image = self.main_ctrl.get_needle_image()
-        self.request_edge_detection()
-    # end before_show
-
-    def update_data(self):
         test = self.main_ctrl.get_current_test()
 
         params = test.edge_params
@@ -58,10 +52,16 @@ class EdgeDetectionController:
 
         self.input_drop_image = test.drop_image
         self.input_needle_image = test.needle_image
-        if(self.input_image is not None and self.neede_imae is not None):
+
+        if(self.input_drop_image is not None
+           and self.input_needle_image is not None):
             self.request_edge_detection()
         else:
             self.output_widget.configure(image="")
+    # end before_show
+
+    def update_data(self):
+        self.before_show()
 
     def update_detection_method(self, value):
         method = self.page.method_var.get()
@@ -193,7 +193,7 @@ class EdgeDetectionController:
     # end request_edge_detection
 
     def send_data(self):
-        if(self.result["points"] is not None):
+        if(self.result is not None and self.result["points"] is not None):
             self.main_ctrl.set_edge_points(self.result["points"])
             self.main_ctrl.set_needle_data(self.needle_data)
             self.main_ctrl.set_edge_params({
@@ -202,6 +202,8 @@ class EdgeDetectionController:
                 "bottom": self.page.bottom_scale.get()
             })
             self.main_ctrl.show_page(FittingPage)
+        else:
+            messagebox.showinfo("Fehler", "Kantenerkennung produziert kein Ergebnis")
 
     def calculate_angle(self, vec_1, vec_2):
         result = np.dot(vec_1, vec_2) / (

@@ -25,7 +25,7 @@ class MainController:
         # print(self.fluids)
 
         # create first dummy test
-        self.test_list.append(TestItem("Test #1"))
+        self.test_list.append(TestItem("1"))
 
 
 
@@ -90,53 +90,32 @@ class MainController:
     def get_current_test(self):
         return self.test_list[self.test_index]
 
+    def get_fluids(self):
+        return self.fluids
+
     def set_original_image(self, image):
         self.test_list[self.test_index].original_image = image
     # end set_original_image
-
-    def get_original_image(self):
-        return self.test_list[self.test_index].original_image
-    # end get_original_image
 
     def set_drop_image(self, image):
         self.test_list[self.test_index].drop_image = image
     # end set_drop_image
 
-    def get_drop_image(self):
-        return self.test_list[self.test_index].drop_image
-    # end get_drop_image
-
     def set_needle_image(self, image):
         self.test_list[self.test_index].needle_image = image
     # end set_drop_image
-
-    def get_needle_image(self):
-        return self.test_list[self.test_index].needle_image
-    # end get_drop_image
 
     def set_needle_data(self, needle_data):
         self.test_list[self.test_index].needle_data = needle_data
     # end set_needle_data
 
-    def get_needle_data(self):
-        return self.test_list[self.test_index].needle_data
-    # end get_needle_data
-
     def set_edge_points(self, points):
         self.test_list[self.test_index].drop_edge_points = points
     # end set_edge_points
 
-    def get_edge_points(self):
-        return self.test_list[self.test_index].drop_edge_points
-    # end get_edge_points
-
     def set_baseline(self, baseline):
         self.test_list[self.test_index].baseline = baseline
     # end set_baseline
-
-    def get_baseline(self):
-        return self.test_list[self.test_index].baseline
-    # end get_baseline
 
     def set_drop_crop(self, drop_crop):
         self.test_list[self.test_index].drop_crop = drop_crop
@@ -154,23 +133,13 @@ class MainController:
         self.test_list[self.test_index].left_points = left_points
         self.test_list[self.test_index].right_points = right_points
 
-    def get_fitting_points(self):
-        return {
-            "left": self.test_list[self.test_index].left_points,
-            "right": self.test_list[self.test_index].right_points
-        }
-
     def set_fit_method(self, fit_method):
         self.test_list[self.test_index].fit_method = fit_method
 
     def set_fit_result(self, fit_result):
         self.test_list[self.test_index].fit_result = fit_result
 
-    def get_fit_result(self):
-        return self.test_list[self.test_index].fit_result
-
-    def get_fluids(self):
-        return self.fluids
-
-    def get_fluid_data(self, name):
-        pass
+    def set_fluid(self, fluid):
+        self.test_list[self.test_index].fluid = fluid
+        # update test series
+        self.test_series_ctrl.update_test_series()

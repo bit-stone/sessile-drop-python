@@ -66,7 +66,10 @@ class TestSeriesController:
         self.page.list.delete(0, tk.END)
 
         for test_item in self.main_ctrl.get_test_list():
-            self.page.list.insert(tk.END, test_item.label)
+            label = test_item.label
+            if(test_item.fluid is not None):
+                label = label + " (" + test_item.fluid + ")"
+            self.page.list.insert(tk.END, label)
 
         self.page.test_label.config(text=self.main_ctrl.get_current_test_label())
 

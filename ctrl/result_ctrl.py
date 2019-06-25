@@ -20,20 +20,27 @@ class ResultController:
     def before_show(self):
         self.show_result_data()
 
-    def show_result_data(self):
-        if(self.main_ctrl.get_drop_image() is not None
-            and self.main_ctrl.get_fit_result() is not None):
-            point_list = self.main_ctrl.get_edge_points()
-            baseline = self.main_ctrl.get_baseline()
-            drop_image_width = self.main_ctrl.get_drop_image().size[0]
+    def update_data(self):
+        self.show_result_data()
 
-            fitting_points = self.main_ctrl.get_fitting_points()
+    def show_result_data(self):
+        test = self.main_ctrl.get_current_test()
+
+        if(test.drop_image is not None and test.fit_result is not None):
+            point_list = test.drop_edge_points
+            baseline = test.baseline
+            drop_image_width = test.drop_image.size[0]
+
+            fitting_points = {
+                "left": test.left_points,
+                "right": test.right_points
+            }
 
             baseline_x = np.arange(0, drop_image_width, 1)
             left_x = np.arange(0, drop_image_width / 2, 1)
             right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
 
-            fit_result = self.main_ctrl.get_fit_result()
+            fit_result = test.fit_result
 
             self.plot.cla()
             self.plot.scatter(
@@ -142,10 +149,3 @@ class ResultController:
 
             avg_angle = (fit_result["left_angle"] + fit_result["right_angle"]) / 2.0
             self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}°".format(math.degrees(avg_angle)))
-
-    def update_data(self):
-        test = self.main_ctrl.get_current_test()
-        self.show_result_data()
-
-    def update_label(self, label):
-        label.config(text="Ich bin nur ein Test")

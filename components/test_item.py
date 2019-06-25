@@ -15,10 +15,12 @@ class TestItem:
         self.left_points = None
         self.right_points = None
 
+        self.fluid = None
+
         self.edge_params = None
 
         self.fit_method = None
         self.fit_result = None
 
     def is_finished(self):
-        return self.fit_result is not None
+        return (self.fit_result is not None and self.fluid is not None)

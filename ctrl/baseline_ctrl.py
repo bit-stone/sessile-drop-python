@@ -2,6 +2,8 @@ from PIL import ImageTk
 from components.baseline import Baseline
 from page.edge_detection_page import EdgeDetectionPage
 
+from tkinter import messagebox
+
 IMAGE_WIDTH = 1280
 
 
@@ -43,11 +45,6 @@ class BaselineController:
     # end before_hide
 
     def before_show(self):
-        self.image = self.main_ctrl.get_original_image()
-        self.show_image()
-    # end before_show
-
-    def update_data(self):
         test = self.main_ctrl.get_current_test()
         # show image first to get scale_factor
         if(test.original_image is not None):
@@ -85,6 +82,10 @@ class BaselineController:
         else:
             self.baseline = Baseline()
             self.reset_lines()
+    # end before_show
+
+    def update_data(self):
+        self.before_show()
 
     def show_image(self):
         if(self.image is not None):
@@ -255,21 +256,7 @@ class BaselineController:
         drop_image = None
         needle_image = None
 
-        # apply crop
-        dx = self.drop_crop[2] - self.drop_crop[0]
-        dy = self.drop_crop[3] - self.drop_crop[1]
-
-        if(dx != 0 and dy != 0):
-            drop_image = self.image.crop(
-                (
-                    self.drop_crop[0],
-                    self.drop_crop[1],
-                    self.drop_crop[2],
-                    self.drop_crop[3]
-                )
-            )
-            drop_image = drop_image.convert("L")
-
+        # needle crop
         dx = self.needle_crop[2] - self.needle_crop[0]
         dy = self.needle_crop[3] - self.needle_crop[1]
 
@@ -283,6 +270,32 @@ class BaselineController:
                 )
             )
             needle_image = needle_image.convert("L")
+        else:
+            messagebox.showinfo("Fehler", "Ungültiger Nadelausschnitt")
+            return
+
+        # drop crop
+        dx = self.drop_crop[2] - self.drop_crop[0]
+        dy = self.drop_crop[3] - self.drop_crop[1]
+
+        if(dx != 0 and dy != 0):
+            drop_image = self.image.crop(
+                (
+                    self.drop_crop[0],
+                    self.drop_crop[1],
+                    self.drop_crop[2],
+                    self.drop_crop[3]
+                )
+            )
+            drop_image = drop_image.convert("L")
+        else:
+            messagebox.showinfo("Fehler", "Ungültiger Tropfenausschnitt")
+            return
+
+        # check baseline
+        if(self.baseline.is_finished is not True):
+            messagebox.showinfo("Fehler", "Ungültige Basislinie")
+            return
 
         # send images
         if(drop_image is not None and needle_image is not None):
@@ -292,7 +305,9 @@ class BaselineController:
             self.main_ctrl.set_needle_crop(self.needle_crop)
             self.main_ctrl.set_baseline(self.baseline)
             self.main_ctrl.show_page(EdgeDetectionPage)
-
+        else:
+            messagebox.showinfo("Fehler", "Fehler beim Erzeugen der Bildausschnitte. Bitte prüfen, ob ein Bild geladen wurde.")
+            return
     # end send_images
 
     def get_scaled_coords(self, evt):

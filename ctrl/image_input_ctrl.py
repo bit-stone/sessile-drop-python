@@ -1,7 +1,8 @@
 import cv2
 from PIL import Image, ImageTk
-from tkinter import filedialog
 import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 
 import settings
 
@@ -35,13 +36,16 @@ class ImageInputController:
         if(self.camera is not None and self.camera.isOpened() is not True):
             self.init_image_input()
 
-    def update_data(self):
         test = self.main_ctrl.get_current_test()
         self.image = test.original_image
+        # print(self.image)
         if(self.image is not None):
             self.update_image_output()
         else:
             self.output_widget.configure(image="")
+
+    def update_data(self):
+        self.before_show()
 
     # **
     # ** end page stuff
@@ -135,4 +139,4 @@ class ImageInputController:
             self.main_ctrl.set_original_image(self.image)
             self.main_ctrl.show_page(BaselinePage)
         else:
-            print("no image to send")
+            messagebox.showinfo("Fehler", "Bitte eine Kamera anschließen oder ein Bild öffnen")
