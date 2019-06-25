@@ -11,6 +11,7 @@ from ctrl.baseline_ctrl import BaselineController
 from ctrl.edge_detection_ctrl import EdgeDetectionController
 from ctrl.fitting_ctrl import FittingController
 from ctrl.result_ctrl import ResultController
+from ctrl.test_series_result_ctrl import TestSeriesResultController
 
 # pages
 from page.toolbar_page import ToolbarPage
@@ -21,6 +22,7 @@ from page.baseline_page import BaselinePage
 from page.edge_detection_page import EdgeDetectionPage
 from page.fitting_page import FittingPage
 from page.result_page import ResultPage
+from page.test_series_result_page import TestSeriesResultPage
 
 # page tuple
 # (page, ctrl)
@@ -29,7 +31,8 @@ page_modules = [
     (BaselinePage, BaselineController),
     (EdgeDetectionPage, EdgeDetectionController),
     (FittingPage, FittingController),
-    (ResultPage, ResultController)
+    (ResultPage, ResultController),
+    (TestSeriesResultPage, TestSeriesResultController)
 ]
 
 

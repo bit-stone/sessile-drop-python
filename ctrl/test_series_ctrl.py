@@ -4,6 +4,7 @@ from tkinter import messagebox
 from components.test_item import TestItem
 
 from page.image_input_page import ImageInputPage
+from page.test_series_result_page import TestSeriesResultPage
 
 
 class TestSeriesController:
@@ -61,6 +62,7 @@ class TestSeriesController:
                 self.main_ctrl.set_test_index_active(index)
                 self.main_ctrl.update_page_data()
                 self.page.activate_index(index)
+            self.main_ctrl.show_page(ImageInputPage)
 
     def update_test_series(self):
         self.page.list.delete(0, tk.END)
@@ -90,6 +92,9 @@ class TestSeriesController:
             for test in test_list:
                 if(test.is_finished() is not True):
                     raise ValueError("Alle Tests müssen abgeschlossen sein. " + test.label + " ist noch nicht abgeschlossen")
+
+
+            self.main_ctrl.show_page(TestSeriesResultPage)
 
         except ValueError as err:
             messagebox.showinfo("Fehler", err)
