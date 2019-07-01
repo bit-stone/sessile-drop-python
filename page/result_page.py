@@ -15,7 +15,7 @@ class ResultPage(tk.Frame):
         self.plot = self.figure.add_subplot(111)
 
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.show()
+        self.canvas.draw()
         self.canvas.get_tk_widget().grid(row=0, column=0)
         self.canvas._tkcanvas.grid(row=1, column=0)
 
