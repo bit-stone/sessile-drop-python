@@ -57,3 +57,13 @@ FT2_BIN_SEARCH_OFFSET = 10
 FT2_BIN_SEARCH_MAX_COUNT = 50
 # desired binary search distance
 FT2_BIN_SEARCH_DELTA_X = 0.0001
+
+
+# ### Fluid-Data Settings #################
+# which index refers to which value
+FLUID_IDX_IFT = 1
+FLUID_IDX_DISPERSE = 2
+FLUID_IDX_POLAR = 3
+FLUID_IDX_DENSITY = 4
+FLUID_IDX_VISCOSITY = 5
+FLUID_IDX_TEMPERATURE = 6

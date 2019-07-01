@@ -1,4 +1,5 @@
 from components.test_item import TestItem
+import settings
 import csv
 
 class MainController:
@@ -12,12 +13,27 @@ class MainController:
         self.test_list_ctrl = None
 
         # read fluids.csv
+        # Format:
+        # Name, IFT, Disperse, Polar, Density, Viscosity, Temperature
         self.fluids = []
         with open("fluids.csv") as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=";")
             first = True
             for row in csv_reader:
+                # append row, ignoring first line as it only
+                # contains title
                 if(not first):
+                    # convert strings to floats
+                    try:
+                        row[settings.FLUID_IDX_IFT] = float(row[settings.FLUID_IDX_IFT])
+                        row[settings.FLUID_IDX_DISPERSE] = float(row[settings.FLUID_IDX_DISPERSE])
+                        row[settings.FLUID_IDX_POLAR] = float(row[settings.FLUID_IDX_POLAR])
+                        row[settings.FLUID_IDX_DENSITY] = float(row[settings.FLUID_IDX_DENSITY])
+                        row[settings.FLUID_IDX_VISCOSITY] = float(row[settings.FLUID_IDX_VISCOSITY])
+                        row[settings.FLUID_IDX_TEMPERATURE] = float(row[settings.FLUID_IDX_TEMPERATURE])
+                    except ValueError:
+                        print("Fehler beim Einlesen der Fluide.")
+                        raise
                     self.fluids.append(row)
                 else:
                     first = False
@@ -92,6 +108,12 @@ class MainController:
 
     def get_fluids(self):
         return self.fluids
+
+    def get_fluid_data(self, test_fluid):
+        for fluid in self.fluids:
+            if(fluid[0] == test_fluid):
+                return fluid
+        return None
 
     def set_original_image(self, image):
         self.test_list[self.test_index].original_image = image

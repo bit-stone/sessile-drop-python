@@ -86,15 +86,16 @@ class FittingTangent2:
             [base_m, 1]
         )
 
+        angle = (self.left_angle + self.right_angle) / 2.0
+        deviation = np.std([self.left_angle, self.right_angle])
+
         # calculate angle with baseline
 
         return {
-            # "left": left_result,
-            # "right": right_result,
-            # "left_1d": left_result1d,
-            # "right_1d": right_result1d,
             "left_angle": self.left_angle,
             "right_angle": self.right_angle,
+            "angle": angle,
+            "deviation": deviation,
             "left_contact_point": self.left_contact_point,
             "right_contact_point": self.right_contact_point,
             "flipped": False

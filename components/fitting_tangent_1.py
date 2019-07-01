@@ -114,6 +114,9 @@ class FittingTangent1:
         print("Links: ", math.degrees(left_angle))
         print("Rechts: ", math.degrees(right_angle))
 
+        angle = (left_angle + right_angle) / 2.0
+        deviation = np.std([left_angle, right_angle])
+
         return {
             # "left": left_result,
             # "right": right_result,
@@ -121,6 +124,8 @@ class FittingTangent1:
             # "right_1d": right_result1d,
             "left_angle": left_angle,
             "right_angle": right_angle,
+            "angle": angle,
+            "deviation": deviation,
             "left_contact_point": left_point,
             "right_contact_point": right_point,
             "flipped": flipped

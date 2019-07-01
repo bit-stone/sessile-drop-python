@@ -91,6 +91,9 @@ class FittingCircle:
         self.left_angle = math.pi - (2 * top_left_angle)
         self.right_angle = math.pi - (2 * top_right_angle)
 
+        angle = (self.left_angle + self.right_angle) / 2.0
+        deviation = np.std([self.left_angle, self.right_angle])
+
         return {
             # "left": left_result,
             # "right": right_result,
@@ -98,6 +101,8 @@ class FittingCircle:
             # "right_1d": right_result1d,
             "left_angle": self.left_angle,
             "right_angle": self.right_angle,
+            "angle": angle,
+            "deviation": deviation,
             "left_contact_point": self.left_contact_point,
             "right_contact_point": self.right_contact_point,
             "flipped": False
