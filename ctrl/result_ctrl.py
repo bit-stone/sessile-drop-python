@@ -139,7 +139,7 @@ class ResultController:
             self.plot.grid(
                 True
             )
-            self.plot.set_title("Tk Embed")
+            self.plot.set_title("Tropfen-Ergebnis")
             self.plot.axis("scaled")
 
             self.canvas.draw()
