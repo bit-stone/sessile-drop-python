@@ -10,13 +10,19 @@ class TestSeriesPage(tk.Frame):
         test_series_label = tk.Label(self, text="Testserie", font=("", 20))
         test_series_label.grid(row=0, column=0)
 
+        self.load_button = tk.Button(self, text="Testserie laden...")
+        self.load_button.grid(row=2, column=0)
+
+        self.save_button = tk.Button(self, text="Testserie speichern")
+        self.save_button.grid(row=3, column=0)
+
         # needle diameter
         needle_label = tk.Label(self, text="Nadeldurchmesser [mm]:")
-        needle_label.grid(row=1, column=0)
+        needle_label.grid(row=5, column=0, pady=(50, 5))
 
         self.needle_entry = tk.Entry(self)
         self.needle_entry.insert(0, "1.000")
-        self.needle_entry.grid(row=2, column=0)
+        self.needle_entry.grid(row=6, column=0)
 
         # current test
         current_label = tk.Label(self, text="Aktueller Test:")

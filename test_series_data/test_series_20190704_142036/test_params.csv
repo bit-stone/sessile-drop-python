@@ -1,0 +1,2 @@
+index;label;fluid;fit_method;edge_method;edge_top_bottom;drop_crop;needle_crop;baseline_first_second
+0;1;Water;tangent_1;bw_threshold_linear;[60, 50];[319, 366, 891, 670];[501, 68, 751, 94];[38, 105, 538, 103]
