@@ -23,6 +23,13 @@ class FittingController:
     def connect_page(self, page):
         self.page = page
 
+        self.page.request_fitting_button.config(
+            command=self.request_fitting
+        )
+
+        # does not work :(
+        # self.page.method_selection.config(command=self.update_fitting_method)
+
         fluids = self.main_ctrl.get_fluids()
         fluid_options = []
         for row in fluids:

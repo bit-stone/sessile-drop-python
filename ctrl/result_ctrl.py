@@ -9,10 +9,10 @@ class ResultController:
         self.canvas = None
         self.count = 0
 
-    def connect_page(self, page, canvas, plot):
+    def connect_page(self, page):
         self.page = page
-        self.canvas = canvas
-        self.plot = plot
+        self.canvas = page.canvas
+        self.plot = page.plot
 
     def before_hide(self):
         pass

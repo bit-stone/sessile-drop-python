@@ -24,24 +24,18 @@ class FittingPage(tk.Frame):
         self.fluid_var = tk.StringVar(self)
         self.fluid_var.set("")
 
-        # set in connect_page to fill it with fluid data!
-        # self.fluid_selection = tk.OptionMenu(
-        #     self,
-        #     self.fluid_var,
-        #     "",
-        #     command=self.ctrl.update_fluid
-        # )
-        # self.fluid_selection.grid(row=8, column=0)
-
         label = tk.Label(
             self,
             text="Fitting-Methode:"
         )
         label.grid(row=9, column=0, pady=(50, 5))
 
+        # fluid option menu created in connect_page
+
         self.method_var = tk.StringVar(self)
         self.method_var.set("tangent_1")
 
+        # OptionMenu needs to have its command when created
         self.method_selection = tk.OptionMenu(
             self,
             self.method_var,
@@ -52,12 +46,11 @@ class FittingPage(tk.Frame):
         )
         self.method_selection.grid(row=10, column=0)
 
-        next_button = tk.Button(
+        self.request_fitting_button = tk.Button(
             self,
-            text="Fitting durchführen",
-            command=self.ctrl.request_fitting
+            text="Fitting durchführen"
         )
-        next_button.grid(row=11, column=0)
+        self.request_fitting_button.grid(row=11, column=0)
 
         self.ctrl.connect_page(self)
 

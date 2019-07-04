@@ -35,28 +35,17 @@ class BaselinePage(tk.Frame):
 
         self.reset_button = tk.Button(
             self.button_frame,
-            text="Erneut zuschneiden",
-            command=ctrl.reset_lines
+            text="Erneut zuschneiden"
         )
         self.reset_button.grid(row=0, column=0)
 
         self.next_button = tk.Button(
             self.button_frame,
-            text="Übernehmen",
-            command=ctrl.send_images
+            text="Übernehmen"
         )
         self.next_button.grid(row=0, column=1)
 
-        self.ctrl.connect_page(
-            self,
-            self.canvas,
-            {
-                "image": self.canvas_image,
-                "baseline": self.canvas_baseline,
-                "drop_crop": self.canvas_drop_crop,
-                "needle_crop": self.canvas_needle_crop
-            }
-        )
+        self.ctrl.connect_page(self)
     # end __init__
 
     def before_hide(self):

@@ -13,6 +13,22 @@ class ToolbarController:
     def connect_page(self, page):
         self.page = page
 
+        self.page.image_input_button.config(
+            command=lambda: self.show_page("image_input")
+        )
+        self.page.baseline_button.config(
+            command=lambda: self.show_page("baseline")
+        )
+        self.page.edge_button.config(
+            command=lambda: self.show_page("edge_detection")
+        )
+        self.page.fitting_button.config(
+            command=lambda: self.show_page("fitting")
+        )
+        self.page.result_page_button.config(
+            command=lambda: self.show_page("result")
+        )
+
     def before_hide(self):
         pass
 

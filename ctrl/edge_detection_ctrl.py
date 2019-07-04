@@ -33,6 +33,12 @@ class EdgeDetectionController:
     def connect_page(self, page):
         self.page = page
         self.output_widget = page.output_widget
+
+        self.page.send_data_button.config(command=self.send_data)
+        self.page.test_button.config(command=self.request_edge_detection)
+
+        # does not work :(
+        # self.page.method_selection.config(command=self.update_detection_method)
     # end connect_page
 
     def before_hide(self):

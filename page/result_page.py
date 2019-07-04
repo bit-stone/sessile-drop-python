@@ -34,7 +34,7 @@ class ResultPage(tk.Frame):
         self.right_angle_label = tk.Label(label_frame, text="Rechter Winkel: 0°")
         self.right_angle_label.grid(row=0, column=2)
 
-        self.ctrl.connect_page(self, self.canvas, self.plot)
+        self.ctrl.connect_page(self)
 
     def before_hide(self):
         self.ctrl.before_hide()

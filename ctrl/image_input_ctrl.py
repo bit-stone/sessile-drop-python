@@ -23,10 +23,15 @@ class ImageInputController:
         self.image = None
         self.image_tk = None
 
-    def connect_page(self, page, output_widget, start_camera_button):
+    def connect_page(self, page):
         self.page = page
-        self.output_widget = output_widget
-        self.start_camera_button = start_camera_button
+        self.output_widget = page.image_label
+        self.start_camera_button = page.start_camera_button
+
+        self.page.open_file_button.config(command=self.load_image_file)
+        self.page.start_camera_button.config(command=self.start_camera)
+        self.page.send_image_button.config(command=self.send_image)
+
         self.init_image_input()
 
     def before_hide(self):

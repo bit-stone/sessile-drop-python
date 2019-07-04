@@ -6,40 +6,35 @@ class ToolbarPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.ctrl = ctrl
 
-        image_input_button = tk.Button(
+        self.image_input_button = tk.Button(
             self,
-            text="Bildeingabe",
-            command=lambda: self.ctrl.show_page("image_input")
+            text="Bildeingabe"
         )
-        image_input_button.grid(row=0, column=1, sticky="nw")
+        self.image_input_button.grid(row=0, column=1, sticky="nw")
 
-        baseline_button = tk.Button(
+        self.baseline_button = tk.Button(
             self,
-            text="Baseline",
-            command=lambda: self.ctrl.show_page("baseline")
+            text="Baseline"
         )
-        baseline_button.grid(row=0, column=2, sticky="nw")
+        self.baseline_button.grid(row=0, column=2, sticky="nw")
 
-        edge_button = tk.Button(
+        self.edge_button = tk.Button(
             self,
-            text="Kantenerkennung",
-            command=lambda: self.ctrl.show_page("edge_detection")
+            text="Kantenerkennung"
         )
-        edge_button.grid(row=0, column=3, sticky="nw")
+        self.edge_button.grid(row=0, column=3, sticky="nw")
 
-        fitting_button = tk.Button(
+        self.fitting_button = tk.Button(
             self,
-            text="Fitting",
-            command=lambda: self.ctrl.show_page("fitting")
+            text="Fitting"
         )
-        fitting_button.grid(row=0, column=4)
+        self.fitting_button.grid(row=0, column=4)
 
-        result_page_button = tk.Button(
+        self.result_page_button = tk.Button(
             self,
-            text="Ergebnis",
-            command=lambda: self.ctrl.show_page("result")
+            text="Ergebnis"
         )
-        result_page_button.grid(row=0, column=5, sticky="nw")
+        self.result_page_button.grid(row=0, column=5, sticky="nw")
 
         self.ctrl.connect_page(self)
 

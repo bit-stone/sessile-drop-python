@@ -31,13 +31,21 @@ class BaselineController:
         self.drop_crop_height = 0
         self.baseline = Baseline()
 
-    def connect_page(self, page, canvas, canvas_refs):
+    def connect_page(self, page):
         self.page = page
-        self.canvas = canvas
-        self.refs = canvas_refs
+        self.canvas = page.canvas
+        self.refs = {
+            "image": self.page.canvas_image,
+            "baseline": self.page.canvas_baseline,
+            "drop_crop": self.page.canvas_drop_crop,
+            "needle_crop": self.page.canvas_needle_crop
+        }
 
         self.canvas.bind("<Button-1>", self.handle_click)
         self.canvas.bind("<Motion>", self.handle_move)
+
+        self.page.next_button.config(command=self.send_images)
+        self.page.reset_button.config(command=self.reset_lines)
     # end connect_page
 
     def before_hide(self):

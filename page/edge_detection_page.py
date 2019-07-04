@@ -19,6 +19,7 @@ class EdgeDetectionPage(tk.Frame):
         self.method_var = tk.StringVar(self)
         self.method_var.set("bw_threshold_linear")
 
+        # OptionMenu needs to have its command when created
         self.method_selection = tk.OptionMenu(
             self,
             self.method_var,
@@ -59,17 +60,15 @@ class EdgeDetectionPage(tk.Frame):
 
         self.test_button = tk.Button(
             self.button_frame,
-            text="Test",
-            command=self.ctrl.request_edge_detection
+            text="Test"
         )
         self.test_button.grid(row=0, column=0)
 
-        self.test_button = tk.Button(
+        self.send_data_button = tk.Button(
             self.button_frame,
-            text="Übernehmen",
-            command=self.ctrl.send_data
+            text="Übernehmen"
         )
-        self.test_button.grid(row=0, column=1)
+        self.send_data_button.grid(row=0, column=1)
 
         self.ctrl.connect_page(self)
     # end __init__
