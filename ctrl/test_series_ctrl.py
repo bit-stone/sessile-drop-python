@@ -42,16 +42,24 @@ class TestSeriesController:
             messagebox.showinfo("Bitte einen Namen vergeben", "Bitte dem neuen Test einen Namen geben")
 
     def remove_active_test(self):
-        confirm_delete = messagebox.askokcancel(
-            "Test entfernen",
-            "Möchten Sie diesen Test wirklich entfernen? Er kann danach nicht wiederhergestellt werden."
-        )
-        if(confirm_delete):
-            index = self.page.list.curselection()
-            if(len(index) > 0):
-                self.page.list.delete(index)
-                self.main_ctrl.delete_test(index[0])
-        pass
+        if(len(self.page.list.get(0, tk.END)) > 1):
+            confirm_delete = messagebox.askokcancel(
+                "Test entfernen",
+                "Möchten Sie diesen Test wirklich entfernen? Er kann danach nicht wiederhergestellt werden."
+            )
+            if(confirm_delete):
+                index = self.page.list.curselection()
+                if(len(index) > 0):
+                    self.page.list.delete(index)
+                    self.main_ctrl.delete_test(index[0])
+
+                    # open first test
+                    self.main_ctrl.set_test_index_active(0)
+                    self.main_ctrl.update_page_data()
+                    self.page.activate_index(0)
+
+        else:
+            messagebox.showinfo("Fehler", "Es muss mindestens einen Test geben")
 
     def open_active_test(self):
         index = self.page.list.curselection()
