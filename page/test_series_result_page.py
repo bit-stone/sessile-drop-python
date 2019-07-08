@@ -29,6 +29,9 @@ class TestSeriesResultPage(tk.Frame):
         self.result_label = tk.Label(self.label_frame, text="")
         self.result_label.grid(row=1, column=0)
 
+        self.save_button = tk.Button(self, text="Testserie speichern")
+        self.save_button.grid(row=3, column=0)
+
         self.ctrl.connect_page(self)
 
     def before_hide(self):

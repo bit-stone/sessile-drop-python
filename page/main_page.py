@@ -58,7 +58,7 @@ class SessileDropApp(tk.Tk):
 
         # Toolbar Frame
         self.button_frame = ToolbarPage(self, self.toolbar_ctrl)
-        self.button_frame.grid(row=0, column=0, sticky="nw")
+        self.button_frame.grid(row=0, column=0, sticky="nsew")
 
         # main content frame (left)
         self.content_frame = tk.Frame(self)

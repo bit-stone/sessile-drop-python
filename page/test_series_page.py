@@ -13,9 +13,6 @@ class TestSeriesPage(tk.Frame):
         self.load_button = tk.Button(self, text="Testserie laden...")
         self.load_button.grid(row=2, column=0)
 
-        self.save_button = tk.Button(self, text="Testserie speichern")
-        self.save_button.grid(row=3, column=0)
-
         # needle diameter
         needle_label = tk.Label(self, text="Nadeldurchmesser [mm]:")
         needle_label.grid(row=5, column=0, pady=(50, 5))

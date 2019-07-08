@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-import os
-import time
-import csv
+
 
 from components.test_item import TestItem
 
@@ -21,7 +19,6 @@ class TestSeriesController:
         self.page.remove_test_button.config(command=self.remove_active_test)
         self.page.show_test_button.config(command=self.open_active_test)
         self.page.series_result_button.config(command=self.show_series_result)
-        self.page.save_button.config(command=self.save_series)
 
     def before_show(self):
         pass
@@ -111,56 +108,5 @@ class TestSeriesController:
         except ValueError as err:
             messagebox.showinfo("Fehler", err)
 
-    def save_series(self):
-        time_label = time.strftime("%Y%m%d_%H%M%S")
-        dir_path = "test_series_data/test_series_" + time_label
-
-        test_list = self.main_ctrl.get_test_list()
-
-        params_list = []
-
-        print("Testserie speichern")
-        print("Zeitpunkt: " + time_label)
-        try:
-            # check if all tests are finished
-            for test in test_list:
-                if(not test.is_finished()):
-                    print("Alle Tests müssen abgeschlossen sein!")
-                    raise ValueError()
-
-            # create directory
-            os.mkdir(dir_path)
-
-            # title lines for csv
-            params_list.append([
-                "index", "label", "fluid", "fit_method",
-                "edge_method", "edge_top_bottom",
-                "drop_crop", "needle_crop", "baseline_first_second"
-            ])
-
-            # save images and gather test data
-            for index, test in enumerate(test_list):
-                test.original_image.save(dir_path + "/" + str(index) + ".png")
-                params_list.append([
-                    index,
-                    test.label,
-                    test.fluid,
-                    test.fit_method,
-                    test.edge_params["method"],
-                    str([test.edge_params["top"], test.edge_params["bottom"]]),
-                    str(test.drop_crop),
-                    str(test.needle_crop),
-                    str(test.baseline.first_point + test.baseline.second_point)
-                ])
-
-            with open(dir_path + "/test_params.csv", "w") as csv_file:
-                # write params
-                writer = csv.writer(
-                    csv_file, delimiter=";"
-                )
-                for line in params_list:
-                    writer.writerow(line)
-
-
-        except ValueError:
-            print("Etwas ist schief gelaufen")
+    def load_series(self):
+        pass
