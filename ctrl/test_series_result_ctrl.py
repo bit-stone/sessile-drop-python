@@ -165,31 +165,43 @@ class TestSeriesResultController:
             os.mkdir(dir_path)
 
             # title lines for csv
-            params_list.append([
-                "index", "label", "fluid", "fit_method",
-                "edge_method", "edge_top_bottom",
-                "drop_crop", "needle_crop", "baseline_first_second",
-                "angle", "deviation"
-            ])
+            label_list = [None] * settings.TEST_SERIES_FILE_COL_COUNT
+
+            label_list[settings.SAVE_IDX_INDEX] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_INDEX]
+            label_list[settings.SAVE_IDX_LABEL] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_LABEL]
+            label_list[settings.SAVE_IDX_FLUID] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_FLUID]
+            label_list[settings.SAVE_IDX_FIT_METHOD] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_FIT_METHOD]
+            label_list[settings.SAVE_IDX_EDGE_METHOD] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_EDGE_METHOD]
+            label_list[settings.SAVE_IDX_EDGE_TOP_BOTTOM] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_EDGE_TOP_BOTTOM]
+            label_list[settings.SAVE_IDX_DROP_CROP] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_DROP_CROP]
+            label_list[settings.SAVE_IDX_NEEDLE_CROP] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_NEEDLE_CROP]
+            label_list[settings.SAVE_IDX_BASELINE_FIRST_SECOND] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_BASELINE_FIRST_SECOND]
+            label_list[settings.SAVE_IDX_ANGLE] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_ANGLE]
+            label_list[settings.SAVE_IDX_DEVIATION] = settings.SAVE_COL_LABELS[settings.SAVE_IDX_DEVIATION]
+
+            params_list.append(label_list)
 
             # save images and gather test data
             for index, test in enumerate(test_list):
                 test.original_image.save(dir_path + "/" + str(index) + ".png")
-                params_list.append([
-                    index,
-                    test.label,
-                    test.fluid,
-                    test.fit_method,
-                    test.edge_params["method"],
-                    str([test.edge_params["top"], test.edge_params["bottom"]]),
-                    str(test.drop_crop),
-                    str(test.needle_crop),
-                    str(test.baseline.first_point + test.baseline.second_point),
-                    test.fit_result["angle"],
-                    test.fit_result["deviation"]
-                ])
 
-            with open(dir_path + "/test_result.csv", "w") as csv_file:
+                test_list = [None] * settings.TEST_SERIES_FILE_COL_COUNT
+
+                test_list[settings.SAVE_IDX_INDEX] = index
+                test_list[settings.SAVE_IDX_LABEL] = test.label
+                test_list[settings.SAVE_IDX_FLUID] = test.fluid
+                test_list[settings.SAVE_IDX_FIT_METHOD] = test.fit_method
+                test_list[settings.SAVE_IDX_EDGE_METHOD] = test.edge_params["method"]
+                test_list[settings.SAVE_IDX_EDGE_TOP_BOTTOM] = str([test.edge_params["top"], test.edge_params["bottom"]])
+                test_list[settings.SAVE_IDX_DROP_CROP] = str(test.drop_crop)
+                test_list[settings.SAVE_IDX_NEEDLE_CROP] = str(test.needle_crop)
+                test_list[settings.SAVE_IDX_BASELINE_FIRST_SECOND] = str(test.baseline.first_point + test.baseline.second_point)
+                test_list[settings.SAVE_IDX_ANGLE] = test.fit_result["angle"]
+                test_list[settings.SAVE_IDX_DEVIATION] = test.fit_result["deviation"]
+
+                params_list.append(test_list)
+
+            with open(dir_path + "/" + settings.TEST_RESULT_FILE_NAME, "w") as csv_file:
                 # write params
                 writer = csv.writer(
                     csv_file, delimiter=";"
@@ -198,7 +210,7 @@ class TestSeriesResultController:
                     writer.writerow(line)
 
             # save result of complete series result
-            with open(dir_path + "/test_series_result.csv", "w") as csv_file:
+            with open(dir_path + "/" + settings.TEST_SERIES_RESULT_FILE_NAME, "w") as csv_file:
                 writer = csv.writer(csv_file, delimiter=";")
                 writer.writerow([
                     "result_polar", "result_disperse", "result_total"

@@ -67,3 +67,35 @@ FLUID_IDX_POLAR = 3
 FLUID_IDX_DENSITY = 4
 FLUID_IDX_VISCOSITY = 5
 FLUID_IDX_TEMPERATURE = 6
+
+# ### Save-Load-Names #######################
+# name of result files
+TEST_RESULT_FILE_NAME = "test_result.csv"
+TEST_SERIES_RESULT_FILE_NAME = "test_series_result.csv"
+TEST_SERIES_FILE_COL_COUNT = 11
+
+SAVE_IDX_INDEX = 0
+SAVE_IDX_LABEL = 1
+SAVE_IDX_FLUID = 2
+SAVE_IDX_FIT_METHOD = 3
+SAVE_IDX_EDGE_METHOD = 4
+SAVE_IDX_EDGE_TOP_BOTTOM = 5
+SAVE_IDX_DROP_CROP = 6
+SAVE_IDX_NEEDLE_CROP = 7
+SAVE_IDX_BASELINE_FIRST_SECOND = 8
+SAVE_IDX_ANGLE = 9
+SAVE_IDX_DEVIATION = 10
+
+SAVE_COL_LABELS = {
+    SAVE_IDX_INDEX: "index",
+    SAVE_IDX_LABEL: "label",
+    SAVE_IDX_FLUID: "fluid",
+    SAVE_IDX_FIT_METHOD: "fit_method",
+    SAVE_IDX_EDGE_METHOD: "edge_method",
+    SAVE_IDX_EDGE_TOP_BOTTOM: "edge_top_bottom",
+    SAVE_IDX_DROP_CROP: "drop_crop",
+    SAVE_IDX_NEEDLE_CROP: "needle_crop",
+    SAVE_IDX_BASELINE_FIRST_SECOND: "baseline_first_second",
+    SAVE_IDX_ANGLE: "angle",
+    SAVE_IDX_DEVIATION: "deviation"
+}

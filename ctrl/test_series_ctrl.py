@@ -1,8 +1,16 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import filedialog
 
+import os
+from os.path import isfile, join
+
+import settings
+import csv
+from PIL import Image, ImageTk
 
 from components.test_item import TestItem
+from components.baseline import Baseline
 
 from page.image_input_page import ImageInputPage
 from page.test_series_result_page import TestSeriesResultPage
@@ -19,6 +27,7 @@ class TestSeriesController:
         self.page.remove_test_button.config(command=self.remove_active_test)
         self.page.show_test_button.config(command=self.open_active_test)
         self.page.series_result_button.config(command=self.show_series_result)
+        self.page.load_button.config(command=self.load_series)
 
     def before_show(self):
         pass
@@ -109,4 +118,80 @@ class TestSeriesController:
             messagebox.showinfo("Fehler", err)
 
     def load_series(self):
-        pass
+        try:
+            dirname = filedialog.askdirectory()
+            print(dirname)
+
+            filelist = os.listdir(dirname)
+            print(filelist)
+
+            # read test file
+            test_file_path = join(dirname, settings.TEST_RESULT_FILE_NAME)
+            print(test_file_path)
+            if isfile(test_file_path):
+                print("found test file")
+            else:
+                raise Exception("Keine Test-Datei gefunden ("+settings.TEST_RESULT_FILE_NAME+")")
+
+            test_list = []
+            with open(test_file_path, "r") as test_csv_file:
+                reader = csv.reader(test_csv_file, delimiter=";")
+                is_first = True
+                for row in reader:
+                    if(is_first):
+                        is_first = False
+                        if(len(row) != settings.TEST_SERIES_FILE_COL_COUNT):
+                            raise Exception("Test-Datei hat eine ungültige Anzahl Spalten")
+                    else:
+                        test_list.append(row)
+
+            if(len(test_list) < 1):
+                raise Exception("Keine Tests gefunden")
+
+            # check if all images exist
+            for row in test_list:
+                if(not isfile(join(dirname, row[0] + ".png"))):
+                    raise Exception("Nicht jeder Test hat ein Bild")
+
+            # load images and create test items
+            test_item_list = []
+            for row in test_list:
+                test = TestItem()
+                test.original_image = Image.open(join(dirname, row[settings.SAVE_IDX_INDEX] + ".png"))
+                test.label = row[settings.SAVE_IDX_LABEL]
+                test.fluid = row[settings.SAVE_IDX_FLUID]
+                test.fit_method = row[settings.SAVE_IDX_FIT_METHOD]
+                test.edge_params = {}
+                test.edge_params["method"] = row[settings.SAVE_IDX_EDGE_METHOD]
+
+                edge_values = self.convert_str_to_int(row[settings.SAVE_IDX_EDGE_TOP_BOTTOM])
+                test.edge_params["top"] = int(edge_values[0])
+                test.edge_params["bottom"] = int(edge_values[1])
+
+                test.drop_crop = self.convert_str_to_int(row[settings.SAVE_IDX_DROP_CROP])
+                test.needle_crop = self.convert_str_to_int(row[settings.SAVE_IDX_NEEDLE_CROP])
+
+                baseline = Baseline()
+                baseline_points = self.convert_str_to_int(row[settings.SAVE_IDX_BASELINE_FIRST_SECOND])
+
+                baseline.set_first_point([baseline_points[0], baseline_points[1]])
+                baseline.set_second_point([baseline_points[2], baseline_points[3]])
+                baseline.calculate_params()
+
+                test.baseline = baseline
+
+                test_item_list.append(test)
+
+            print(test_item_list)
+            self.main_ctrl.set_test_list(test_item_list)
+            self.main_ctrl.set_test_index_active(0)
+            self.main_ctrl.update_page_data()
+
+        except Exception as e:
+            print(e)
+            messagebox.showinfo("Fehler", e)
+
+    def convert_str_to_int(self, str):
+        result = list(map(int, str.strip("[]").split(",")))
+        print(result)
+        return result

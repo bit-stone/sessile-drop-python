@@ -99,6 +99,9 @@ class MainController:
         return self.test_list
     # end get_test_list
 
+    def set_test_list(self, test_list):
+        self.test_list = test_list
+
     def get_current_test_label(self):
         return self.test_list[self.test_index].label
     # end get_current_test_label
