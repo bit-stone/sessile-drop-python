@@ -168,7 +168,8 @@ class TestSeriesResultController:
             params_list.append([
                 "index", "label", "fluid", "fit_method",
                 "edge_method", "edge_top_bottom",
-                "drop_crop", "needle_crop", "baseline_first_second"
+                "drop_crop", "needle_crop", "baseline_first_second",
+                "angle", "deviation"
             ])
 
             # save images and gather test data
@@ -183,10 +184,12 @@ class TestSeriesResultController:
                     str([test.edge_params["top"], test.edge_params["bottom"]]),
                     str(test.drop_crop),
                     str(test.needle_crop),
-                    str(test.baseline.first_point + test.baseline.second_point)
+                    str(test.baseline.first_point + test.baseline.second_point),
+                    test.fit_result["angle"],
+                    test.fit_result["deviation"]
                 ])
 
-            with open(dir_path + "/test_params.csv", "w") as csv_file:
+            with open(dir_path + "/test_result.csv", "w") as csv_file:
                 # write params
                 writer = csv.writer(
                     csv_file, delimiter=";"
@@ -194,8 +197,15 @@ class TestSeriesResultController:
                 for line in params_list:
                     writer.writerow(line)
 
-            # save result of single tests and complete series result
-
+            # save result of complete series result
+            with open(dir_path + "/test_series_result.csv", "w") as csv_file:
+                writer = csv.writer(csv_file, delimiter=";")
+                writer.writerow([
+                    "result_polar", "result_disperse", "result_total"
+                ])
+                writer.writerow([
+                    self.result_polar, self.result_disperse, self.result_total
+                ])
 
 
         except ValueError:
