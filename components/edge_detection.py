@@ -1,11 +1,71 @@
 import numpy as np
 import cv2
 import settings
+import math
+import util as util
 
 
 class EdgeDetection:
     def __init__(self):
         pass
+
+    def needle_detection(self, needle_image):
+        needle_result = self.sobel_canny(
+            needle_image,
+            settings.SOBEL_NEEDLE_TOP,
+            settings.SOBEL_NEEDLE_BOTTOM
+        )
+
+        # get middle point
+        needle_left = np.amin(needle_result["points"], axis=0)[1]
+        needle_right = np.amax(needle_result["points"], axis=0)[1]
+        needle_middle_point = needle_right - needle_left
+
+        # filter points to left/right
+        left_needle_points = needle_result["points"][
+            needle_result["points"][:, 1] <= needle_middle_point
+        ]
+
+        right_needle_points = needle_result["points"][
+            needle_result["points"][:, 1] > needle_middle_point
+        ]
+
+        # reduce left/right to one average value to get distance
+        needle_avg_left = np.average(left_needle_points[:, 1])
+        needle_avg_right = np.average(right_needle_points[:, 1])
+
+        needle_width = needle_avg_right - needle_avg_left
+
+        # get angle and apply it to before mentioned distance
+        # first fit line to left/right
+        needle_left_fit = np.polyfit(
+            left_needle_points[:, 0],
+            left_needle_points[:, 1],
+            1
+        )
+
+        needle_right_fit = np.polyfit(
+            right_needle_points[:, 0],
+            right_needle_points[:, 1],
+            1
+        )
+
+        avg_m = (needle_left_fit[0] + needle_right_fit[0]) / 2.0
+
+        needle_angle = util.calculate_angle(
+            [1, 0],
+            [1, avg_m]
+        )
+
+        needle_width = needle_width * math.cos(needle_angle)
+
+        return {
+            "width": needle_width,
+            "angle": needle_angle
+        }
+
+    # end needle_detection
+    # ##################
 
     def sobel_canny(
         self,
@@ -35,6 +95,8 @@ class EdgeDetection:
             "image": result,
             "points": result_points
         }
+    # end sobel_canny
+    # ##################
 
     def bw_threshold_linear(
         self,
@@ -111,3 +173,5 @@ class EdgeDetection:
             "image": bw_values,
             "points": result_points
         }
+    # end bw_threshold_linear
+    # ##################

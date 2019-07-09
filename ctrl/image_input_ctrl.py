@@ -1,8 +1,10 @@
 import cv2
-from PIL import Image, ImageTk
+from PIL import Image
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+
+import util as util
 
 import settings
 
@@ -19,17 +21,18 @@ class ImageInputController:
 
         self.output_widget = None
         self.start_camera_button = None
+        self.camera_image = None
+        self.camera_image_tk = None
 
-        self.image = None
-        self.image_tk = None
+        self.test_item = None
 
     def connect_page(self, page):
         self.page = page
         self.output_widget = page.image_label
-        self.start_camera_button = page.start_camera_button
 
         self.page.open_file_button.config(command=self.load_image_file)
         self.page.start_camera_button.config(command=self.start_camera)
+        self.page.capture_camera_button.config(command=self.capture_camera_output)
         self.page.send_image_button.config(command=self.send_image)
 
         self.init_image_input()
@@ -41,10 +44,9 @@ class ImageInputController:
         if(self.camera is not None and self.camera.isOpened() is not True):
             self.init_image_input()
 
-        test = self.main_ctrl.get_current_test()
-        self.image = test.original_image
-        # print(self.image)
-        if(self.image is not None):
+        self.test_item = self.main_ctrl.get_current_test()
+
+        if(self.test_item.original_image is not None):
             self.update_image_output()
         else:
             self.output_widget.configure(image="")
@@ -52,9 +54,6 @@ class ImageInputController:
     def update_data(self):
         self.before_show()
 
-    # **
-    # ** end page stuff
-    # **
     def init_image_input(self):
         try:
             self.camera = cv2.VideoCapture(0)
@@ -81,7 +80,8 @@ class ImageInputController:
 
         if(self.camera is None):
             print("no camera present. disable camera button")
-            self.start_camera_button.config(state=tk.DISABLED)
+            self.page.start_camera_button.config(state=tk.DISABLED)
+            self.page.capture_camera_button.config(state=tk.DISABLED)
 
         return self.camera is not None
 
@@ -104,13 +104,18 @@ class ImageInputController:
             frame = cv2.flip(frame, 1)
             # convert to grayscale
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            self.image = Image.fromarray(cv2image)
+            self.camera_image = Image.fromarray(cv2image)
             self.update_image_output()
 
             self.output_widget.after(
                 settings.IMAGE_INPUT_FRAME_DELAY,
                 self.update_camera_output
             )
+
+    def capture_camera_output(self):
+        self.test_item.original_image = self.camera_image
+        self.pause_camera()
+        self.update_image_output()
 
     def load_image_file(self):
         # stop camera
@@ -125,23 +130,23 @@ class ImageInputController:
             )
         )
         if(isinstance(file_name, str) is True):
-            self.image = Image.open(file_name)
+            self.test_item.original_image = Image.open(file_name)
             self.update_image_output()
 
     def update_image_output(self):
-        if(self.image is not None):
-            img_size = self.image.size
-            new_width = settings.STANDARD_IMAGE_WIDTH
-            new_height = int(settings.STANDARD_IMAGE_WIDTH * (img_size[1] / img_size[0]))
-            self.image_tk = ImageTk.PhotoImage(
-                image=self.image.resize((new_width, new_height))
-                # image=self.image.resize((500, 282))
+        if(self.camera_running is True):
+            self.camera_image_tk = util.image_to_widget(
+                self.camera_image, self.output_widget
             )
-            self.output_widget.configure(image=self.image_tk)
+        else:
+            self.test_item.original_image_tk = util.image_to_widget(
+                self.test_item.original_image, self.output_widget
+            )
+            print(self.test_item.original_image_tk)
 
     def send_image(self):
-        if(self.image is not None):
-            self.main_ctrl.set_original_image(self.image)
+        if(self.test_item.original_image is not None):
+            self.pause_camera()
             self.main_ctrl.show_page(BaselinePage)
         else:
-            messagebox.showinfo("Fehler", "Bitte eine Kamera anschließen oder ein Bild öffnen")
+            messagebox.showinfo("Fehler", "Der Test benötigt ein gültiges Bild.")

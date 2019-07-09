@@ -2,6 +2,8 @@ import numpy as np
 import tkinter as tk
 from tkinter import messagebox
 
+import math
+
 from components.fitting_tangent_1 import FittingTangent1
 from components.fitting_circle import FittingCircle
 from components.fitting_tangent_2 import FittingTangent2
@@ -14,11 +16,7 @@ class FittingController:
         self.page = None,
         self.main_ctrl = main_ctrl
 
-        self.left_angle = 0.0
-        self.right_angle = 0.0
-
-        self.left_contact_point = [0, 0]
-        self.right_contact_point = [0, 0]
+        self.test_item = None
 
     def connect_page(self, page):
         self.page = page
@@ -47,37 +45,42 @@ class FittingController:
         pass
 
     def before_show(self):
-        test = self.main_ctrl.get_current_test()
+        self.test_item = self.main_ctrl.get_current_test()
 
-        if(test.fit_method is not None):
-            self.page.method_var.set(test.fit_method)
-        if(test.fluid is not None):
-            self.page.fluid_var.set(test.fluid)
-        if(test.needle_data is not None):
-            self.page.needle_width_label.config(
-                text="Breite: {0:.2f}px".format(test.needle_data["width"])
-            )
-            self.page.needle_angle_label.config(
-                text="Winkel: {0:.2f}°".format(test.needle_data["angle_degrees"])
-            )
+        if(self.test_item.fit_method is not None):
+            self.page.method_var.set(self.test_item.fit_method)
+        if(self.test_item.fluid is not None):
+            self.page.fluid_var.set(self.test_item.fluid)
+
+        self.page.needle_width_label.config(
+            text="Breite: {0:.2f}px".format(self.test_item.needle_pixel_width)
+        )
+        self.page.needle_angle_label.config(
+            text="Winkel: {0:.2f}°".format(math.degrees(self.test_item.needle_angle))
+        )
 
     def update_data(self):
         self.before_show()
 
+    def update_fitting_method(self, value):
+        self.test_item.fit_method = value
+
+    def update_fluid(self, value):
+        self.test_item.fluid = value
+        self.main_ctrl.update_test_series()
+
     def request_fitting(self):
-        test = self.main_ctrl.get_current_test()
-
-        if(len(self.page.fluid_var.get()) == 0):
-            messagebox.showinfo("Fehler", "Bitte eine Flüssigkeit auswählen")
-            return
-
-        if(len(self.page.method_var.get()) == 0):
+        if(len(self.test_item.fit_method) == 0):
             messagebox.showinfo("Fehler", "Bitte eine Fitting-Methode auswählen")
             return
 
+        if(self.test_item.fluid is None or len(self.test_item.fluid) == 0):
+            messagebox.showinfo("Fehler", "Bitte eine Flüssigkeit auswählen")
+            return
+
         # get edge points
-        points = test.drop_edge_points
-        baseline = test.baseline
+        points = self.test_item.edge_points
+        baseline = self.test_item.baseline
 
         # filter only points above baseline
         # el[0] -> y  - - el[1] -> x
@@ -107,10 +110,12 @@ class FittingController:
         # print("Punkte links: ", len(left_points))
         # print("Punkte rechts: ", len(right_points))
 
-        self.main_ctrl.set_fitting_points(left_points, right_points)
+        # self.main_ctrl.set_fitting_points(left_points, right_points)
+        self.test_item.left_points = left_points
+        self.test_item.right_points = right_points
 
         # eigentliches Fitting ausführen
-        method = self.page.method_var.get()
+        method = self.test_item.fit_method
         fit_result = None
 
         if(method == "tangent_1"):
@@ -124,14 +129,6 @@ class FittingController:
             fit_result = fitter.request_fitting(left_points, right_points, baseline)
 
         if(fit_result is not None):
-            self.main_ctrl.set_fit_method(method)
-            self.main_ctrl.set_fit_result(fit_result)
-            self.main_ctrl.set_fluid(self.page.fluid_var.get())
+            self.test_item.fit_result = fit_result
 
         self.main_ctrl.show_page(ResultPage)
-
-    def update_fitting_method(self, value):
-        pass
-
-    def update_fluid(self, value):
-        pass

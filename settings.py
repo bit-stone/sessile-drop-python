@@ -20,6 +20,7 @@ STANDARD_IMAGE_WIDTH = 1280
 # #### Default settings for edge detection
 # #
 # Threshold for bw_threshold_linear method
+# this is the default value for the slider on edge detection page
 BW_DEFAULT_THRESHOLD = 60
 
 # Threshold for edge on black/white image

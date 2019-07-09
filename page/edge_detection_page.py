@@ -38,7 +38,8 @@ class EdgeDetectionPage(tk.Frame):
             to=255,
             orient=tk.HORIZONTAL,
             sliderlength=20,
-            length=150
+            length=150,
+            label="Threshold"
         )
         self.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
         self.top_scale.grid(row=0, column=0)
@@ -60,15 +61,15 @@ class EdgeDetectionPage(tk.Frame):
 
         self.test_button = tk.Button(
             self.button_frame,
-            text="Test"
+            text="Kanten erkennen"
         )
         self.test_button.grid(row=0, column=0)
 
         self.send_data_button = tk.Button(
             self.button_frame,
-            text="Übernehmen"
+            text="Weiter"
         )
-        self.send_data_button.grid(row=0, column=1)
+        self.send_data_button.grid(row=0, column=1, padx=(100, 5))
 
         self.ctrl.connect_page(self)
     # end __init__

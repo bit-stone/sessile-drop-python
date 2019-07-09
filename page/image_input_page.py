@@ -29,13 +29,19 @@ class ImageInputPage(tk.Frame):
             button_frame,
             text="Kamera an"
         )
-        self.start_camera_button.grid(row=0, column=1)
+        self.start_camera_button.grid(row=0, column=1, padx=(100,5))
+
+        self.capture_camera_button = tk.Button(
+            button_frame,
+            text="Aufname"
+        )
+        self.capture_camera_button.grid(row=0, column=2)
 
         self.send_image_button = tk.Button(
             button_frame,
-            text="Übernehmen"
+            text="Weiter"
         )
-        self.send_image_button.grid(row=0, column=2)
+        self.send_image_button.grid(row=0, column=3, padx=(100, 5))
 
         self.ctrl.connect_page(self)
 

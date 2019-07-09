@@ -65,6 +65,10 @@ class MainController:
         page.grid()
     # end show_page
 
+    # used to complete test data after loading test series
+    def complete_tests(self):
+        pass
+
     def update_page_data(self):
         if(self.page_list is not None):
             for key, page in self.page_list.items():

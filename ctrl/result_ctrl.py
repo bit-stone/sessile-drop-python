@@ -5,9 +5,11 @@ class ResultController:
     def __init__(self, main_ctrl):
         self.page = None,
         self.main_ctrl = main_ctrl
+
         self.plot = None
         self.canvas = None
-        self.count = 0
+
+        self.test_item = None
 
     def connect_page(self, page):
         self.page = page
@@ -24,23 +26,24 @@ class ResultController:
         self.show_result_data()
 
     def show_result_data(self):
-        test = self.main_ctrl.get_current_test()
+        self.test_item = self.main_ctrl.get_current_test()
 
-        if(test.drop_image is not None and test.fit_result is not None):
-            point_list = test.drop_edge_points
-            baseline = test.baseline
-            drop_image_width = test.drop_image.size[0]
+        if(self.test_item.drop_image is not None
+           and self.test_item.fit_result is not None):
+            point_list = self.test_item.edge_points
+            baseline = self.test_item.baseline
+            drop_image_width = self.test_item.drop_image.size[0]
 
             fitting_points = {
-                "left": test.left_points,
-                "right": test.right_points
+                "left": self.test_item.left_points,
+                "right": self.test_item.right_points
             }
 
             baseline_x = np.arange(0, drop_image_width, 1)
-            left_x = np.arange(0, drop_image_width / 2, 1)
-            right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
+            # left_x = np.arange(0, drop_image_width / 2, 1)
+            # right_x = np.arange(drop_image_width / 2, drop_image_width, 1)
 
-            fit_result = test.fit_result
+            fit_result = self.test_item.fit_result
 
             self.plot.cla()
             self.plot.scatter(
@@ -108,33 +111,9 @@ class ResultController:
             ]
 
             self.plot.quiver(
-                X, Y, U, V, angles="xy", scale_units="xy", scale=1, width=0.004, color="b"
+                X, Y, U, V, angles="xy",
+                scale_units="xy", scale=1, width=0.004, color="b"
             )
-
-            if(fit_result["flipped"]):
-                # self.plot.plot(
-                #     fit_result["left_1d"](left_x),
-                #     left_x,
-                #     color="g"
-                # )
-                # self.plot.plot(
-                #     fit_result["right_1d"](right_x),
-                #     right_x,
-                #     color="y"
-                # )
-                pass
-            else:
-                # self.plot.plot(
-                #     left_x,
-                #     fit_result["left_1d"](left_x),
-                #     color="g"
-                # )
-                # self.plot.plot(
-                #     right_x,
-                #     fit_result["right_1d"](right_x),
-                #     color="y"
-                # )
-                pass
 
             self.plot.grid(
                 True
@@ -144,7 +123,20 @@ class ResultController:
 
             self.canvas.draw()
 
-            self.page.left_angle_label.config(text="Linker Winkel: {0:.2f}°".format(math.degrees(fit_result["left_angle"])))
-            self.page.right_angle_label.config(text="Rechter Winkel: {0:.2f}°".format(math.degrees(fit_result["right_angle"])))
+            self.page.left_angle_label.config(
+                text="Linker Winkel: {0:.2f}°".format(
+                    math.degrees(fit_result["left_angle"])
+                )
+            )
+            self.page.right_angle_label.config(
+                text="Rechter Winkel: {0:.2f}°".format(
+                    math.degrees(fit_result["right_angle"])
+                )
+            )
 
-            self.page.avg_angle_label.config(text="Mittlerer Winkel: {0:.2f}° +- {1:.2f}°".format(math.degrees(fit_result["angle"]), math.degrees(fit_result["deviation"])))
+            self.page.avg_angle_label.config(
+                text="Mittlerer Winkel: {0:.2f}° +- {1:.2f}°".format(
+                    math.degrees(fit_result["angle"]),
+                    math.degrees(fit_result["deviation"])
+                )
+            )

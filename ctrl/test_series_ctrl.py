@@ -187,6 +187,8 @@ class TestSeriesController:
             self.main_ctrl.set_test_index_active(0)
             self.main_ctrl.update_page_data()
 
+            self.main_ctrl.complete_tests()
+
         except Exception as e:
             print(e)
             messagebox.showinfo("Fehler", e)

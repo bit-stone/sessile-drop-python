@@ -41,9 +41,9 @@ class BaselinePage(tk.Frame):
 
         self.next_button = tk.Button(
             self.button_frame,
-            text="Übernehmen"
+            text="Weiter"
         )
-        self.next_button.grid(row=0, column=1)
+        self.next_button.grid(row=0, column=1, padx=(100, 5))
 
         self.ctrl.connect_page(self)
     # end __init__

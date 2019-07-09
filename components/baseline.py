@@ -9,7 +9,7 @@ class Baseline:
         self.b = 0.0
         self.left_point = [0, 0]
         self.right_point = [0, 0]
-        self.is_finished = False
+        self.is_finished_var = False
 
     def set_first_point(self, point):
         self.first_point = point
@@ -32,14 +32,14 @@ class Baseline:
         if(dx != 0):
             self.m = dy / dx
             self.b = dxy / dx
-            self.is_finished = True
+            self.is_finished_var = True
         else:
             self.m = 0
             self.b = 0
-            self.is_finished = False
+            self.is_finished_var = False
 
     def get_value(self, x):
         return self.m * x + self.b
 
     def is_finished(self):
-        return self.is_finished
+        return self.is_finished_var

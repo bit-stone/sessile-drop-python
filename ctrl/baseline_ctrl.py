@@ -1,10 +1,8 @@
-from PIL import ImageTk
-from components.baseline import Baseline
 from page.edge_detection_page import EdgeDetectionPage
 
 from tkinter import messagebox
-
-IMAGE_WIDTH = 1280
+import settings
+import util as util
 
 
 class BaselineController:
@@ -14,22 +12,7 @@ class BaselineController:
         self.canvas = None
         self.refs = None
 
-        self.image = None
-        self.image_tk = None
-        self.scale_factor = 1.0
-
-        self.click_state = "needle_crop_1"
-
-        # positions in respect to scaled canvas
-        # used to draw lines / rects
-        self.baseline_coords = [0, 0, 0, 0]
-        self.drop_crop_coords = [0, 0, 0, 0]
-        self.needle_crop_coords = [0, 0, 0, 0]
-
-        self.drop_crop = [0, 0, 0, 0]
-        self.needle_crop = [0, 0, 0, 0]
-        self.drop_crop_height = 0
-        self.baseline = Baseline()
+        self.test_item = None
 
     def connect_page(self, page):
         self.page = page
@@ -53,63 +36,53 @@ class BaselineController:
     # end before_hide
 
     def before_show(self):
-        test = self.main_ctrl.get_current_test()
+        self.test_item = self.main_ctrl.get_current_test()
+
         # show image first to get scale_factor
-        if(test.original_image is not None):
-            self.image = test.original_image
-        else:
-            self.image = None
         self.show_image()
 
         # show lines and rects
-        if(test.baseline is not None):
-            self.baseline = test.baseline
-            self.drop_crop = test.drop_crop
-            self.needle_crop = test.needle_crop
+        baseline = self.test_item.baseline
+        drop_crop = self.test_item.drop_crop
+        needle_crop = self.test_item.needle_crop
+        scale_factor = self.test_item.scale_factor
 
-            b1 = self.get_rescaled_baseline_coords(
-                self.baseline.first_point, self.drop_crop
-            )
-            b2 = self.get_rescaled_baseline_coords(
-                self.baseline.second_point, self.drop_crop
-            )
+        b1 = util.get_rescaled_baseline_coords(
+            baseline.first_point, drop_crop, scale_factor
+        )
+        b2 = util.get_rescaled_baseline_coords(
+            baseline.second_point, drop_crop, scale_factor
+        )
 
-            self.baseline_coords = [
-                b1[0], b1[1], b2[0], b2[1]
-            ]
+        self.test_item.baseline_coords = [
+            b1[0], b1[1], b2[0], b2[1]
+        ]
 
-            self.drop_crop_coords = self.get_rescaled_drop_coords(
-                self.drop_crop
-            )
+        self.test_item.drop_crop_coords = util.get_rescaled_drop_coords(
+            drop_crop, scale_factor
+        )
 
-            self.needle_crop_coords = self.get_rescaled_drop_coords(
-                self.needle_crop
-            )
+        self.test_item.needle_crop_coords = util.get_rescaled_drop_coords(
+            needle_crop, scale_factor
+        )
 
-            self.update_lines()
-        else:
-            self.baseline = Baseline()
-            self.reset_lines()
+        self.update_lines()
     # end before_show
 
     def update_data(self):
         self.before_show()
 
     def show_image(self):
-        if(self.image is not None):
-            if(self.image.size[0] > IMAGE_WIDTH):
-                self.scale_factor = IMAGE_WIDTH / self.image.size[0]
+        if(self.test_item.original_image is not None):
+            # calculate scaling to get a fixed max width image
+            if(self.test_item.original_image.size[0] > settings.STANDARD_IMAGE_WIDTH):
+                self.test_item.scale_factor = settings.STANDARD_IMAGE_WIDTH / self.test_item.original_image.size[0]
             else:
-                self.scale_factor = 1.0
+                self.test_item.scale_factor = 1.0
 
-            print("Skalierung: ", self.scale_factor)
-
-            new_width = int(self.image.size[0] * self.scale_factor)
-            new_height = int(self.image.size[1] * self.scale_factor)
-
-            self.image_tk = ImageTk.PhotoImage(
-                image=self.image.resize((new_width, new_height))
-            )
+            # calculate new size of canvas
+            new_width = int(self.test_item.original_image.size[0] * self.test_item.scale_factor)
+            new_height = int(self.test_item.original_image.size[1] * self.test_item.scale_factor)
 
             self.canvas.config(
                 width=new_width,
@@ -118,12 +91,12 @@ class BaselineController:
 
             self.canvas.itemconfig(
                 self.refs["image"],
-                image=self.image_tk
+                image=self.test_item.original_image_tk
             )
         else:
             self.canvas.config(
-                width=100,
-                height=100
+                width=1280,
+                height=720
             )
             self.canvas.itemconfig(
                 self.refs["image"],
@@ -132,75 +105,77 @@ class BaselineController:
         # end if image not None
 
     def handle_click(self, evt):
-        pos = self.get_scaled_coords(evt)
+        pos = util.get_scaled_coords(evt, self.test_item.scale_factor)
 
-        if(self.click_state == "needle_crop_1"):
-            self.needle_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
-            self.needle_crop_coords = [evt.x, evt.y, evt.x, evt.y]
+        if(self.test_item.click_state == "needle_crop_1"):
+            self.test_item.needle_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
+            self.test_item.needle_crop_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
-            self.click_state = "needle_crop_2"
-        elif(self.click_state == "needle_crop_2"):
-            self.needle_crop[2] = pos["x"]
-            self.needle_crop[3] = pos["y"]
-            self.needle_crop_coords[2] = evt.x
-            self.needle_crop_coords[3] = evt.y
+            self.test_item.click_state = "needle_crop_2"
+        elif(self.test_item.click_state == "needle_crop_2"):
+            self.test_item.needle_crop[2] = pos["x"]
+            self.test_item.needle_crop[3] = pos["y"]
+            self.test_item.needle_crop_coords[2] = evt.x
+            self.test_item.needle_crop_coords[3] = evt.y
             self.update_lines()
-            self.click_state = "drop_crop_1"
-        elif(self.click_state == "drop_crop_1"):
-            self.drop_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
-            self.drop_crop_coords = [evt.x, evt.y, evt.x, evt.y]
+            # generate needle image
+            self.generate_needle_image()
+            self.test_item.click_state = "drop_crop_1"
+        elif(self.test_item.click_state == "drop_crop_1"):
+            self.test_item.drop_crop = [pos["x"], pos["y"], pos["x"], pos["y"]]
+            self.test_item.drop_crop_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
-            self.click_state = "drop_crop_2"
-        elif(self.click_state == "drop_crop_2"):
-            self.drop_crop[2] = pos["x"]
-            self.drop_crop[3] = pos["y"]
-            self.drop_crop_coords[2] = evt.x
-            self.drop_crop_coords[3] = evt.y
-            self.drop_crop_height = abs(
-                int(self.drop_crop[3] - self.drop_crop[1])
-            )
+            self.test_item.click_state = "drop_crop_2"
+        elif(self.test_item.click_state == "drop_crop_2"):
+            self.test_item.drop_crop[2] = pos["x"]
+            self.test_item.drop_crop[3] = pos["y"]
+            self.test_item.drop_crop_coords[2] = evt.x
+            self.test_item.drop_crop_coords[3] = evt.y
             self.update_lines()
-            self.click_state = "baseline_1"
-        elif(self.click_state == "baseline_1"):
-            self.baseline.set_first_point(
+            # generate drop image
+            self.generate_drop_image()
+            self.test_item.click_state = "baseline_1"
+        elif(self.test_item.click_state == "baseline_1"):
+            self.test_item.baseline.set_first_point(
                 [
-                    pos["x"] - self.drop_crop[0],
-                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                    pos["x"] - self.test_item.drop_crop[0],
+                    self.test_item.get_drop_crop_height() - (pos["y"] - self.test_item.drop_crop[1])
                 ]
             )
-            self.baseline.set_second_point(
+            self.test_item.baseline.set_second_point(
                 [
-                    pos["x"] - self.drop_crop[0],
-                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                    pos["x"] - self.test_item.drop_crop[0],
+                    self.test_item.get_drop_crop_height() - (pos["y"] - self.test_item.drop_crop[1])
                 ]
             )
-            self.baseline_coords = [evt.x, evt.y, evt.x, evt.y]
+            self.test_item.baseline_coords = [evt.x, evt.y, evt.x, evt.y]
             self.update_lines()
-            self.click_state = "baseline_2"
-        elif(self.click_state == "baseline_2"):
-            self.baseline.set_second_point(
+            self.test_item.click_state = "baseline_2"
+        elif(self.test_item.click_state == "baseline_2"):
+            self.test_item.baseline.set_second_point(
                 [
-                    pos["x"] - self.drop_crop[0],
-                    self.drop_crop_height - (pos["y"] - self.drop_crop[1])
+                    pos["x"] - self.test_item.drop_crop[0],
+                    self.test_item.get_drop_crop_height() - (pos["y"] - self.test_item.drop_crop[1])
                 ]
             )
-            self.baseline_coords[2] = evt.x
-            self.baseline_coords[3] = evt.y
-            self.baseline.calculate_params()
+            self.test_item.baseline_coords[2] = evt.x
+            self.test_item.baseline_coords[3] = evt.y
+            # generate baseline
+            self.test_item.baseline.calculate_params()
             self.update_lines()
-            self.click_state = ""
+            self.test_item.click_state = ""
     # end handle_click
 
     def handle_move(self, evt):
-        if(self.click_state == "needle_crop_2"):
-            self.needle_crop_coords[2] = evt.x
-            self.needle_crop_coords[3] = evt.y
-        elif(self.click_state == "drop_crop_2"):
-            self.drop_crop_coords[2] = evt.x
-            self.drop_crop_coords[3] = evt.y
-        elif(self.click_state == "baseline_2"):
-            self.baseline_coords[2] = evt.x
-            self.baseline_coords[3] = evt.y
+        if(self.test_item.click_state == "needle_crop_2"):
+            self.test_item.needle_crop_coords[2] = evt.x
+            self.test_item.needle_crop_coords[3] = evt.y
+        elif(self.test_item.click_state == "drop_crop_2"):
+            self.test_item.drop_crop_coords[2] = evt.x
+            self.test_item.drop_crop_coords[3] = evt.y
+        elif(self.test_item.click_state == "baseline_2"):
+            self.test_item.baseline_coords[2] = evt.x
+            self.test_item.baseline_coords[3] = evt.y
 
         self.update_lines()
     # end handle_move
@@ -209,134 +184,111 @@ class BaselineController:
         self.canvas.coords(
             self.refs["drop_crop"],
             (
-                self.drop_crop_coords[0],
-                self.drop_crop_coords[1],
-                self.drop_crop_coords[2],
-                self.drop_crop_coords[3],
+                self.test_item.drop_crop_coords[0],
+                self.test_item.drop_crop_coords[1],
+                self.test_item.drop_crop_coords[2],
+                self.test_item.drop_crop_coords[3],
             )
         )
 
         self.canvas.coords(
             self.refs["baseline"],
             (
-                self.baseline_coords[0],
-                self.baseline_coords[1],
-                self.baseline_coords[2],
-                self.baseline_coords[3],
+                self.test_item.baseline_coords[0],
+                self.test_item.baseline_coords[1],
+                self.test_item.baseline_coords[2],
+                self.test_item.baseline_coords[3],
             )
         )
 
         self.canvas.coords(
             self.refs["needle_crop"],
             (
-                self.needle_crop_coords[0],
-                self.needle_crop_coords[1],
-                self.needle_crop_coords[2],
-                self.needle_crop_coords[3]
+                self.test_item.needle_crop_coords[0],
+                self.test_item.needle_crop_coords[1],
+                self.test_item.needle_crop_coords[2],
+                self.test_item.needle_crop_coords[3]
             )
         )
 
-        if(self.click_state == "needle_crop_1" or self.click_state == "needle_crop_2"):
+        if(self.test_item.click_state == "needle_crop_1" or self.test_item.click_state == "needle_crop_2"):
             self.page.help_label.config(text="Nadelausschnitt setzen")
-        elif(self.click_state == "drop_crop_1" or self.click_state == "drop_crop_2"):
+        elif(self.test_item.click_state == "drop_crop_1" or self.test_item.click_state == "drop_crop_2"):
             self.page.help_label.config(text="Tropfenausschnitt setzen")
-        elif(self.click_state == "baseline_1" or self.click_state == "baseline_2"):
+        elif(self.test_item.click_state == "baseline_1" or self.test_item.click_state == "baseline_2"):
             self.page.help_label.config(text="Basisilinie setzen")
         else:
             self.page.help_label.config(text="Fertig")
     # end update_lines
 
     def reset_lines(self):
-        self.baseline_coords = [0, 0, 0, 0]
-        self.drop_crop_coords = [0, 0, 0, 0]
-        self.needle_crop_coords = [0, 0, 0, 0]
+        self.test_item.baseline_coords = [0, 0, 0, 0]
+        self.test_item.drop_crop_coords = [0, 0, 0, 0]
+        self.test_item.needle_crop_coords = [0, 0, 0, 0]
 
         # values in respect to the original image
-        self.drop_crop = [0, 0, 0, 0]
-        self.needle_crop = [0, 0, 0, 0]
-        self.baseline.reset_points()
+        self.test_item.drop_crop = [0, 0, 0, 0]
+        self.test_item.needle_crop = [0, 0, 0, 0]
+        self.test_item.baseline.reset_points()
+
+        self.test_item.drop_image = None
+        self.test_item.needle_image = None
 
         self.update_lines()
-        self.click_state = "needle_crop_1"
+        self.test_item.click_state = "needle_crop_1"
     # end reset_lines
 
-    def send_images(self):
-        drop_image = None
-        needle_image = None
-
+    def generate_needle_image(self):
         # needle crop
-        dx = self.needle_crop[2] - self.needle_crop[0]
-        dy = self.needle_crop[3] - self.needle_crop[1]
+        dx = self.test_item.needle_crop[2] - self.test_item.needle_crop[0]
+        dy = self.test_item.needle_crop[3] - self.test_item.needle_crop[1]
 
         if(dx != 0 and dy != 0):
-            needle_image = self.image.crop(
+            needle_image = self.test_item.original_image.crop(
                 (
-                    self.needle_crop[0],
-                    self.needle_crop[1],
-                    self.needle_crop[2],
-                    self.needle_crop[3]
+                    self.test_item.needle_crop[0],
+                    self.test_item.needle_crop[1],
+                    self.test_item.needle_crop[2],
+                    self.test_item.needle_crop[3]
                 )
             )
             needle_image = needle_image.convert("L")
+            self.test_item.needle_image = needle_image
         else:
             messagebox.showinfo("Fehler", "Ungültiger Nadelausschnitt")
+            self.test_item.needle_image = None
             return
 
-        # drop crop
-        dx = self.drop_crop[2] - self.drop_crop[0]
-        dy = self.drop_crop[3] - self.drop_crop[1]
+    def generate_drop_image(self):
+        dx = self.test_item.drop_crop[2] - self.test_item.drop_crop[0]
+        dy = self.test_item.drop_crop[3] - self.test_item.drop_crop[1]
 
         if(dx != 0 and dy != 0):
-            drop_image = self.image.crop(
+            drop_image = self.test_item.original_image.crop(
                 (
-                    self.drop_crop[0],
-                    self.drop_crop[1],
-                    self.drop_crop[2],
-                    self.drop_crop[3]
+                    self.test_item.drop_crop[0],
+                    self.test_item.drop_crop[1],
+                    self.test_item.drop_crop[2],
+                    self.test_item.drop_crop[3]
                 )
             )
             drop_image = drop_image.convert("L")
+            self.test_item.drop_image = drop_image
         else:
             messagebox.showinfo("Fehler", "Ungültiger Tropfenausschnitt")
+            self.test_item.drop_image = None
             return
 
+    def send_images(self):
         # check baseline
-        if(self.baseline.is_finished is not True):
+        if(self.test_item.baseline.is_finished() is not True):
             messagebox.showinfo("Fehler", "Ungültige Basislinie")
             return
 
         # send images
-        if(drop_image is not None and needle_image is not None):
-            self.main_ctrl.set_drop_image(drop_image)
-            self.main_ctrl.set_drop_crop(self.drop_crop)
-            self.main_ctrl.set_needle_image(needle_image)
-            self.main_ctrl.set_needle_crop(self.needle_crop)
-            self.main_ctrl.set_baseline(self.baseline)
+        if(self.test_item.needle_image is not None and self.test_item.drop_image is not None):
             self.main_ctrl.show_page(EdgeDetectionPage)
         else:
             messagebox.showinfo("Fehler", "Fehler beim Erzeugen der Bildausschnitte. Bitte prüfen, ob ein Bild geladen wurde.")
             return
     # end send_images
-
-    def get_scaled_coords(self, evt):
-        mx = int(evt.x * ((1.0) / self.scale_factor))
-        my = int(evt.y * ((1.0) / self.scale_factor))
-        return {"x": mx, "y": my}
-    # end get_scaled_coords
-
-    def get_rescaled_baseline_coords(self, point, drop_crop):
-        dch = drop_crop[3] - drop_crop[1]
-        return (
-            int((point[0] + drop_crop[0]) * self.scale_factor),
-            int(((dch - point[1]) + drop_crop[1]) * self.scale_factor)
-        )
-    # end get_rescaled_baseline_coords
-
-    def get_rescaled_drop_coords(self, drop_crop):
-        return [
-            int(drop_crop[0] * self.scale_factor),
-            int(drop_crop[1] * self.scale_factor),
-            int(drop_crop[2] * self.scale_factor),
-            int(drop_crop[3] * self.scale_factor)
-        ]
-    # end get_rescaled_drop_coords

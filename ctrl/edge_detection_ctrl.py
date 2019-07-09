@@ -1,9 +1,8 @@
-from PIL import Image, ImageTk
-import numpy as np
-import math
-import numpy.linalg as npla
+from PIL import Image
+
 import settings
 from tkinter import messagebox
+import util as util
 
 from components.edge_detection import EdgeDetection
 
@@ -15,18 +14,9 @@ class EdgeDetectionController:
         self.page = None
         self.main_ctrl = main_ctrl
 
+        self.test_item = None
+
         self.edge_detection = EdgeDetection()
-
-        self.input_image = None
-
-        self.drop_image = None
-        self.drop_tk_image = None
-
-        self.needle_image = None
-        self.needle_tk_image = None
-
-        self.result = None
-        self.needle_data = None
 
     # end __init__
 
@@ -34,11 +24,11 @@ class EdgeDetectionController:
         self.page = page
         self.output_widget = page.output_widget
 
-        self.page.send_data_button.config(command=self.send_data)
+        self.page.send_data_button.config(command=self.next_command)
         self.page.test_button.config(command=self.request_edge_detection)
 
-        # does not work :(
-        # self.page.method_selection.config(command=self.update_detection_method)
+        self.page.top_scale.config(command=self.update_top_scale)
+        self.page.bottom_scale.config(command=self.update_bottom_scale)
     # end connect_page
 
     def before_hide(self):
@@ -46,21 +36,15 @@ class EdgeDetectionController:
     # end before_hide
 
     def before_show(self):
-        test = self.main_ctrl.get_current_test()
+        self.test_item = self.main_ctrl.get_current_test()
 
-        params = test.edge_params
-        if(params is not None):
-            # set params
-            self.page.method_var.set(params["method"])
-            self.page.top_scale.set(params["top"])
-            self.page.bottom_scale.set(params["bottom"])
-            self.update_scales()
+        self.page.method_var.set(self.test_item.edge_method)
+        self.page.top_scale.set(self.test_item.edge_value_top)
+        self.page.bottom_scale.set(self.test_item.edge_value_bottom)
+        self.update_scales()
 
-        self.input_drop_image = test.drop_image
-        self.input_needle_image = test.needle_image
-
-        if(self.input_drop_image is not None
-           and self.input_needle_image is not None):
+        if(self.test_item.drop_image is not None
+           and self.test_item.needle_image is not None):
             self.request_edge_detection()
         else:
             self.output_widget.configure(image="")
@@ -70,14 +54,23 @@ class EdgeDetectionController:
         self.before_show()
 
     def update_detection_method(self, value):
-        method = self.page.method_var.get()
-        if(method == "sobel_canny"):
+        self.test_item.edge_method = self.page.method_var.get()
+        if(self.test_item.edge_method == "sobel_canny"):
             self.page.top_scale.set(settings.SOBEL_DEFAULT_TOP)
+            self.test_item.edge_value_top = settings.SOBEL_DEFAULT_TOP
             self.page.bottom_scale.set(settings.SOBEL_DEFAULT_BOTTOM)
-        elif(method == "bw_threshold_linear"):
+            self.test_item.edge_value_bottom = settings.SOBEL_DEFAULT_BOTTOM
+        elif(self.test_item.edge_method == "bw_threshold_linear"):
             self.page.top_scale.set(settings.BW_DEFAULT_THRESHOLD)
+            self.test_item.edge_value_top = settings.BW_DEFAULT_THRESHOLD
         self.update_scales()
     # end update_detection_method
+
+    def update_top_scale(self, value):
+        self.test_item.edge_value_top = int(value)
+
+    def update_bottom_scale(self, value):
+        self.test_item.edge_value_bottom = int(value)
 
     def update_scales(self):
         method = self.page.method_var.get()
@@ -98,123 +91,44 @@ class EdgeDetectionController:
             self.page.bottom_scale.grid_remove()
     # end update_scales
 
-    def draw_output_image(self, image):
-        if(image is not None):
-            scale_factor = 1.0
-            if(image.size[0] > settings.STANDARD_IMAGE_WIDTH):
-                scale_factor = settings.STANDARD_IMAGE_WIDTH / image.size[0]
-
-            width = int(image.size[0] * scale_factor)
-            height = int(image.size[1] * scale_factor)
-            self.drop_tk_image = ImageTk.PhotoImage(
-                image=image.resize((width, height))
-            )
-            self.output_widget.configure(
-                image=self.drop_tk_image
-            )
-    # end draw_output_image
-
     def request_edge_detection(self):
         # detect needle
-        if(self.input_needle_image is not None):
-            self.needle_data = None
-
-            self.needle_result = self.edge_detection.sobel_canny(
-                self.input_needle_image,
-                settings.SOBEL_NEEDLE_TOP,
-                settings.SOBEL_NEEDLE_BOTTOM
+        if(self.test_item.needle_image is not None):
+            needle_data = self.edge_detection.needle_detection(
+                self.test_item.needle_image
             )
-
-            # get middle point
-            needle_left = np.amin(self.needle_result["points"], axis=0)[1]
-            needle_right = np.amax(self.needle_result["points"], axis=0)[1]
-            needle_middle_point = needle_right - needle_left
-
-            # filter points to left/right
-            left_needle_points = self.needle_result["points"][
-                self.needle_result["points"][:,1] <= needle_middle_point
-            ]
-
-            right_needle_points = self.needle_result["points"][
-                self.needle_result["points"][:,1] > needle_middle_point
-            ]
-
-            # reduce left/right to one average value to get distance
-            needle_avg_left = np.average(left_needle_points[:,1])
-            needle_avg_right = np.average(right_needle_points[:,1])
-
-            needle_width = needle_avg_right - needle_avg_left
-
-            # get angle and apply it to before mentioned distance
-            # first fit line to left/right
-            needle_left_fit = np.polyfit(
-                left_needle_points[:,0],
-                left_needle_points[:,1],
-                1
-            )
-
-            needle_right_fit = np.polyfit(
-                right_needle_points[:,0],
-                right_needle_points[:,1],
-                1
-            )
-
-            avg_m = (needle_left_fit[0] + needle_right_fit[0]) / 2.0
-
-            needle_angle = self.calculate_angle(
-                [1, 0],
-                [1, avg_m]
-            )
-
-            needle_width = needle_width * math.cos(needle_angle)
-
-            self.needle_data = {
-                "width": needle_width,
-                "angle": needle_angle,
-                "angle_degrees": math.degrees(needle_angle)
-            }
+            self.test_item.needle_pixel_width = needle_data["width"]
+            self.test_item.needle_angle = needle_data["angle"]
 
         # detect drop
-        if(self.input_drop_image is not None):
-            method = self.page.method_var.get()
-            self.result = None
-            if(method == "sobel_canny"):
-                self.result = self.edge_detection.sobel_canny(
-                    self.input_drop_image,
-                    self.page.top_scale.get(),
-                    self.page.bottom_scale.get()
+        if(self.test_item.drop_image is not None):
+            drop_data = None
+            if(self.test_item.edge_method == "sobel_canny"):
+                drop_data = self.edge_detection.sobel_canny(
+                    self.test_item.drop_image,
+                    self.test_item.edge_value_top,
+                    self.test_item.edge_value_bottom
                 )
-            elif(method == "bw_threshold_linear"):
-                self.result = self.edge_detection.bw_threshold_linear(
-                    self.input_drop_image,
-                    self.page.top_scale.get()
+            elif(self.test_item.edge_method == "bw_threshold_linear"):
+                drop_data = self.edge_detection.bw_threshold_linear(
+                    self.test_item.drop_image,
+                    self.test_item.edge_value_top
                 )
 
-            if(self.result is not None):
-                self.drop_image = Image.fromarray(
-                    self.result["image"],
+            if(drop_data is not None):
+                self.test_item.edge_points = drop_data["points"]
+
+                self.test_item.edge_image = Image.fromarray(
+                    drop_data["image"],
                     mode="L"
                 )
-                self.draw_output_image(self.drop_image)
+                self.test_item.edge_image_tk = util.image_to_widget(
+                    self.test_item.edge_image, self.output_widget
+                )
     # end request_edge_detection
 
-    def send_data(self):
-        if(self.result is not None and self.result["points"] is not None):
-            self.main_ctrl.set_edge_points(self.result["points"])
-            self.main_ctrl.set_needle_data(self.needle_data)
-            self.main_ctrl.set_edge_params({
-                "method": self.page.method_var.get(),
-                "top": self.page.top_scale.get(),
-                "bottom": self.page.bottom_scale.get()
-            })
+    def next_command(self):
+        if(len(self.test_item.edge_points) > 0):
             self.main_ctrl.show_page(FittingPage)
         else:
-            messagebox.showinfo("Fehler", "Kantenerkennung produziert kein Ergebnis")
-
-    def calculate_angle(self, vec_1, vec_2):
-        result = np.dot(vec_1, vec_2) / (
-            (npla.norm(vec_1)) * (npla.norm(vec_2))
-        )
-        result = math.acos(result)
-
-        return result
+            messagebox.showinfo("Fehler", "Kantenerkennung produziert kein oder ein leeres Ergebnis")
