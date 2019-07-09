@@ -161,12 +161,12 @@ class TestSeriesController:
                 test.label = row[settings.SAVE_IDX_LABEL]
                 test.fluid = row[settings.SAVE_IDX_FLUID]
                 test.fit_method = row[settings.SAVE_IDX_FIT_METHOD]
-                test.edge_params = {}
-                test.edge_params["method"] = row[settings.SAVE_IDX_EDGE_METHOD]
+
+                test.edge_method = row[settings.SAVE_IDX_EDGE_METHOD]
 
                 edge_values = self.convert_str_to_int(row[settings.SAVE_IDX_EDGE_TOP_BOTTOM])
-                test.edge_params["top"] = int(edge_values[0])
-                test.edge_params["bottom"] = int(edge_values[1])
+                test.edge_value_top = int(edge_values[0])
+                test.edge_value_bottom = int(edge_values[1])
 
                 test.drop_crop = self.convert_str_to_int(row[settings.SAVE_IDX_DROP_CROP])
                 test.needle_crop = self.convert_str_to_int(row[settings.SAVE_IDX_NEEDLE_CROP])

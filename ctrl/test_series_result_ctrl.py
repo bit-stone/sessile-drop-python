@@ -191,8 +191,8 @@ class TestSeriesResultController:
                 test_list[settings.SAVE_IDX_LABEL] = test.label
                 test_list[settings.SAVE_IDX_FLUID] = test.fluid
                 test_list[settings.SAVE_IDX_FIT_METHOD] = test.fit_method
-                test_list[settings.SAVE_IDX_EDGE_METHOD] = test.edge_params["method"]
-                test_list[settings.SAVE_IDX_EDGE_TOP_BOTTOM] = str([test.edge_params["top"], test.edge_params["bottom"]])
+                test_list[settings.SAVE_IDX_EDGE_METHOD] = test.edge_method
+                test_list[settings.SAVE_IDX_EDGE_TOP_BOTTOM] = str([test.edge_value_top, test.edge_value_bottom])
                 test_list[settings.SAVE_IDX_DROP_CROP] = str(test.drop_crop)
                 test_list[settings.SAVE_IDX_NEEDLE_CROP] = str(test.needle_crop)
                 test_list[settings.SAVE_IDX_BASELINE_FIRST_SECOND] = str(test.baseline.first_point + test.baseline.second_point)
