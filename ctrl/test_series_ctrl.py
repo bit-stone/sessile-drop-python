@@ -93,7 +93,8 @@ class TestSeriesController:
                 label = label + " (" + test_item.fluid + ")"
             self.page.list.insert(tk.END, label)
 
-        self.page.test_label.config(text=self.main_ctrl.get_current_test_label())
+        self.page.test_label.config(
+            text=self.main_ctrl.get_current_test_label())
 
     def show_series_result(self):
         try:
