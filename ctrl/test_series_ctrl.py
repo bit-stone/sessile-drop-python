@@ -98,7 +98,7 @@ class TestSeriesController:
 
     def show_series_result(self):
         try:
-            # check whether needle diameter is set
+            # check whether needle diameter is set or not
             try:
                 needle_diameter = float(self.page.needle_entry.get())
             except ValueError:
