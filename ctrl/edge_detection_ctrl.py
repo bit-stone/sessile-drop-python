@@ -102,18 +102,23 @@ class EdgeDetectionController:
 
         # detect drop
         if(self.test_item.drop_image is not None):
-            drop_data = None
-            if(self.test_item.edge_method == "sobel_canny"):
-                drop_data = self.edge_detection.sobel_canny(
-                    self.test_item.drop_image,
-                    self.test_item.edge_value_top,
-                    self.test_item.edge_value_bottom
-                )
-            elif(self.test_item.edge_method == "bw_threshold_linear"):
-                drop_data = self.edge_detection.bw_threshold_linear(
-                    self.test_item.drop_image,
-                    self.test_item.edge_value_top
-                )
+            drop_data = self.edge_detection.request_edge_detection(
+                self.test_item.drop_image,
+                self.test_item.edge_method,
+                self.test_item.edge_value_top,
+                self.test_item.edge_value_bottom,
+            )
+            # if(self.test_item.edge_method == "sobel_canny"):
+            #     drop_data = self.edge_detection.sobel_canny(
+            #         self.test_item.drop_image,
+            #         self.test_item.edge_value_top,
+            #         self.test_item.edge_value_bottom
+            #     )
+            # elif(self.test_item.edge_method == "bw_threshold_linear"):
+            #     drop_data = self.edge_detection.bw_threshold_linear(
+            #         self.test_item.drop_image,
+            #         self.test_item.edge_value_top
+            #     )
 
             if(drop_data is not None):
                 self.test_item.edge_points = drop_data["points"]

@@ -9,6 +9,25 @@ class EdgeDetection:
     def __init__(self):
         pass
 
+    def request_edge_detection(
+        self, drop_image, method, top_value, bottom_value
+    ):
+        drop_data = None
+        if(method == "sobel_canny"):
+            drop_data = self.sobel_canny(
+                drop_image,
+                top_value,
+                bottom_value
+            )
+        elif(method == "bw_threshold_linear"):
+            drop_data = self.bw_threshold_linear(
+                drop_image,
+                top_value
+            )
+
+        return drop_data
+    # end request_edge_detection
+
     def needle_detection(self, needle_image):
         needle_result = self.sobel_canny(
             needle_image,

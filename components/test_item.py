@@ -21,6 +21,12 @@ class TestItem:
         self.drop_crop = [0, 0, 0, 0]  # saved
         self.needle_crop = [0, 0, 0, 0]  # saved
 
+        # remember: these values are based on the
+        # scale_factor of the original image!
+        # these three values do not need to be
+        # calculated when loading as they are only
+        # needed to draw visual representations of
+        # drop_crop, needle_crop and baseline.
         self.baseline_coords = [0, 0, 0, 0]
         self.drop_crop_coords = [0, 0, 0, 0]
         self.needle_crop_coords = [0, 0, 0, 0]

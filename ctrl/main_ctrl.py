@@ -1,11 +1,27 @@
 from components.test_item import TestItem
+
+from components.fitting_tangent_1 import FittingTangent1
+from components.fitting_circle import FittingCircle
+from components.fitting_tangent_2 import FittingTangent2
+
+from components.edge_detection import EdgeDetection
+
 import settings
 import csv
+
 
 class MainController:
     def __init__(self):
         self.page_list = None
         self.current_page = None
+
+        self.fitter = {
+            "tangent_1": FittingTangent1(),
+            "tangent_2": FittingTangent2(),
+            "circle": FittingCircle()
+        }
+
+        self.edge_detection = EdgeDetection()
 
         self.test_list = []
         self.test_index = 0
@@ -42,8 +58,7 @@ class MainController:
 
         # create first dummy test
         self.test_list.append(TestItem("1"))
-
-
+    # end __init__
 
     def init_page_list(self, page_list):
         self.page_list = page_list
@@ -64,10 +79,6 @@ class MainController:
         self.current_page.before_show()
         page.grid()
     # end show_page
-
-    # used to complete test data after loading test series
-    def complete_tests(self):
-        pass
 
     def update_page_data(self):
         if(self.page_list is not None):

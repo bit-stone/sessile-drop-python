@@ -244,16 +244,10 @@ class BaselineController:
         dy = self.test_item.needle_crop[3] - self.test_item.needle_crop[1]
 
         if(dx != 0 and dy != 0):
-            needle_image = self.test_item.original_image.crop(
-                (
-                    self.test_item.needle_crop[0],
-                    self.test_item.needle_crop[1],
-                    self.test_item.needle_crop[2],
-                    self.test_item.needle_crop[3]
-                )
+            self.test_item.needle_image = util.generate_cropped_image(
+                self.test_item.original_image,
+                self.test_item.needle_crop
             )
-            needle_image = needle_image.convert("L")
-            self.test_item.needle_image = needle_image
         else:
             messagebox.showinfo("Fehler", "Ungültiger Nadelausschnitt")
             self.test_item.needle_image = None
@@ -264,16 +258,10 @@ class BaselineController:
         dy = self.test_item.drop_crop[3] - self.test_item.drop_crop[1]
 
         if(dx != 0 and dy != 0):
-            drop_image = self.test_item.original_image.crop(
-                (
-                    self.test_item.drop_crop[0],
-                    self.test_item.drop_crop[1],
-                    self.test_item.drop_crop[2],
-                    self.test_item.drop_crop[3]
-                )
+            self.test_item.drop_image = util.generate_cropped_image(
+                self.test_item.original_image,
+                self.test_item.drop_crop
             )
-            drop_image = drop_image.convert("L")
-            self.test_item.drop_image = drop_image
         else:
             messagebox.showinfo("Fehler", "Ungültiger Tropfenausschnitt")
             self.test_item.drop_image = None
