@@ -11,7 +11,7 @@ IMAGE_INPUT_FRAME_HEIGHT = 720
 # 30 fps => 1000 / 30 = 33 ms
 # 50 fps => 1000 / 50 = 20 ms
 # 60 fps => 1000 / 60 = 16 ms
-IMAGE_INPUT_FRAME_DELAY = 50
+IMAGE_INPUT_FRAME_DELAY = 16
 
 # standard image width
 STANDARD_IMAGE_WIDTH = 1280

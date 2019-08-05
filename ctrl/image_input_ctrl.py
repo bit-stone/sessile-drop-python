@@ -1,5 +1,5 @@
 import cv2
-from PIL import Image
+from PIL import Image, ImageOps
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
@@ -105,6 +105,7 @@ class ImageInputController:
             # convert to grayscale
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             self.camera_image = Image.fromarray(cv2image)
+            self.camera_image = ImageOps.flip(self.camera_image)
             self.update_image_output()
 
             self.output_widget.after(
