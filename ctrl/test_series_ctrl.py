@@ -99,10 +99,10 @@ class TestSeriesController:
     def show_series_result(self):
         try:
             # check whether needle diameter is set or not
-            try:
-                needle_diameter = float(self.page.needle_entry.get())
-            except ValueError:
-                raise ValueError("Bitte einen gültigen Nadeldurchmesser in mm angeben (Format 1.234)")
+            # try:
+            #     needle_diameter = float(self.page.needle_entry.get())
+            # except ValueError:
+            #     raise ValueError("Bitte einen gültigen Nadeldurchmesser in mm angeben (Format 1.234)")
 
             # need at least one test
             test_list = self.main_ctrl.get_test_list()

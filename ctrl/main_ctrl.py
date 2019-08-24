@@ -26,7 +26,7 @@ class MainController:
         self.test_list = []
         self.test_index = 0
 
-        self.test_list_ctrl = None
+        self.test_series_ctrl = None
 
         # read fluids.csv
         # Format:
