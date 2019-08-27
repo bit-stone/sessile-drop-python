@@ -25,6 +25,7 @@ class MainController:
 
         self.test_list = []
         self.test_index = 0
+        self.needle_diameter = 0.0
 
         self.test_series_ctrl = None
 
